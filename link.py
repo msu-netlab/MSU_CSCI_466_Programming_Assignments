@@ -23,7 +23,10 @@ class Link:
         self.to_intf_num = to_intf_num
         self.in_intf = from_node.out_intf_L[from_intf_num]
         self.out_intf = to_node.in_intf_L[to_intf_num]
-        self.mtu = mtu
+        #configure the linking interface MTUs
+        self.in_intf.mtu = mtu
+        self.out_intf.mtu = mtu
+        
         
     ## called when printing the object
     def __str__(self):
@@ -34,8 +37,8 @@ class Link:
         pkt_S = self.in_intf.get()
         if pkt_S is None:
             return #return if no packet to transfer
-        if len(pkt_S) > self.mtu:
-            print('%s: packet "%s" length greater then link mtu (%d)' % (self, pkt_S, self.mtu))
+        if len(pkt_S) > self.out_intf.mtu:
+            print('%s: packet "%s" length greater then link mtu (%d)' % (self, pkt_S, self.out_intf.mtu))
             return #return without transmitting if packet too big
         #otherwise transmit the packet
         try:

@@ -12,6 +12,7 @@ class Interface:
     ## @param maxsize - the maximum size of the queue storing packets
     def __init__(self, maxsize=0):
         self.queue = queue.Queue(maxsize);
+        self.mtu = None
     
     ##get packet from the queue interface
     def get(self):
@@ -81,7 +82,7 @@ class Host:
     def udt_send(self, dst_addr, data_S):
         p = NetworkPacket(dst_addr, data_S)
         self.out_intf_L[0].put(p.to_byte_S()) #send packets always enqueued successfully
-        print('%s: sending packet "%s"' % (self, p))
+        print('%s: sending packet "%s" out interface with mtu=%d' % (self, p, self.out_intf_L[0].mtu))
         
     ## receive packet from the network layer
     def udt_receive(self):
@@ -134,7 +135,8 @@ class Router:
                     # forwarding table to find the appropriate outgoing interface
                     # for now we assume the outgoing interface is also i
                     self.out_intf_L[i].put(p.to_byte_S(), True)
-                    print('%s: forwarding packet "%s" from interface %d to %d' % (self, p, i, i))
+                    print('%s: forwarding packet "%s" from interface %d to %d with mtu %d' \
+                        % (self, p, i, i, self.out_intf_L[i].mtu))
             except queue.Full:
                 print('%s: packet "%s" lost on interface %d' % (self, p, i))
                 pass
@@ -146,5 +148,4 @@ class Router:
             self.forward()
             if self.stop:
                 print (threading.currentThread().getName() + ': Ending')
-                return
-           
+                return 
