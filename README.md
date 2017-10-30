@@ -1,4 +1,2 @@
-# CSCI_466_Programming_Assignments
-Programming Assignments for the CSCI 466: Networks course at Montana State University
+# CSCI 466 Programming Assignment 3 - Data Plane
 
-Please choose a branch corresponding to a programming assignment.
