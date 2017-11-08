@@ -1,1 +1,4 @@
 __pycache*
+*.pyc
+*.sublime-project
+*.sublime-workspace
