@@ -16,7 +16,7 @@ In this lab you will:
 
 -   Control routing using link costs
 
-##Overview
+## Overview
 
 During this project, you will implement a distance-vector routing protocol on a router. 
 Your task is to extend the given code to implement several router functions.
