@@ -11,10 +11,9 @@ import threading
 class Interface:
     ## @param maxsize - the maximum size of the queue storing packets
     #  @param cost - of the interface used in routing
-    def __init__(self, cost=0, maxsize=0):
+    def __init__(self, maxsize=0):
         self.in_queue = queue.Queue(maxsize);
         self.out_queue = queue.Queue(maxsize);
-        self.cost = cost
     
     ##get packet from the queue interface
     # @param in_or_out - use 'in' or 'out' interface
@@ -141,17 +140,16 @@ class Host:
 class Router:
     
     ##@param name: friendly router name for debugging
-    # @param intf_cost_L: outgoing cost of interfaces (and interface number) 
+    # @param num_intf: number of bidirectional interfaces
     # @param rt_tbl_D: routing table dictionary (starting reachability), eg. {1: {1: 1}} # packet to host 1 through interface 1 for cost 1
     # @param max_queue_size: max queue length (passed to Interface)
-    def __init__(self, name, intf_cost_L, rt_tbl_D, max_queue_size):
+    def __init__(self, name, num_intf, rt_tbl_D, max_queue_size):
         self.stop = False #for thread termination
         self.name = name
         #create a list of interfaces
-        #note the number of interfaces is set up by out_intf_cost_L
         self.intf_L = []
-        for cost in intf_cost_L:
-            self.intf_L.append(Interface(cost, max_queue_size))
+        for i in range(num_intf):
+            self.intf_L.append(Interface(max_queue_size))
         #set up the routing table for connected hosts
         self.rt_tbl_D = rt_tbl_D 
 
