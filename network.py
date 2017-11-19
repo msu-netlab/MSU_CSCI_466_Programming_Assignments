@@ -140,16 +140,16 @@ class Host:
 class Router:
     
     ##@param name: friendly router name for debugging
-    # @param num_intf: number of bidirectional interfaces
+    # @param intf_cost_L: outgoing cost of interfaces (and interface number) 
     # @param rt_tbl_D: routing table dictionary (starting reachability), eg. {1: {1: 1}} # packet to host 1 through interface 1 for cost 1
     # @param max_queue_size: max queue length (passed to Interface)
-    def __init__(self, name, num_intf, rt_tbl_D, max_queue_size):
+    def __init__(self, name, intf_cost_L, rt_tbl_D, max_queue_size):
         self.stop = False #for thread termination
         self.name = name
+        #save interface costs for use in routing table updates
+        self.intf_cost_L = intf_cost_L
         #create a list of interfaces
-        self.intf_L = []
-        for i in range(num_intf):
-            self.intf_L.append(Interface(max_queue_size))
+        self.intf_L = [Interface(max_queue_size) for _ in range(len(intf_cost_L))]
         #set up the routing table for connected hosts
         self.rt_tbl_D = rt_tbl_D 
 
@@ -193,6 +193,8 @@ class Router:
     def update_routes(self, p, i):
         #TODO: add logic to update the routing tables and
         # possibly send out routing updates
+        # self.rt_tbl_D is the routing table on this router
+        # self.intf_cost_L are the interface costs for links defined in simulation.py
         print('%s: Received routing update %s from interface %d' % (self, p, i))
         
     ## send out route update
