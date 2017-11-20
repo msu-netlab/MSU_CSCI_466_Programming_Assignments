@@ -1,9 +1,3 @@
-'''
-Created on Oct 12, 2016
-
-@author: mwitt_000
-'''
-
 import queue
 import threading
 
@@ -28,7 +22,9 @@ class Link:
         
     ##transmit a packet between interfaces in each direction
     def tx_pkt(self):
-        for (node_a, node_a_intf, node_b, node_b_intf) in [(self.node_1, self.node_1_intf, self.node_2, self.node_2_intf), (self.node_2, self.node_2_intf, self.node_1, self.node_1_intf)]: 
+        for (node_a, node_a_intf, node_b, node_b_intf) in \
+        [(self.node_1, self.node_1_intf, self.node_2, self.node_2_intf), 
+         (self.node_2, self.node_2_intf, self.node_1, self.node_1_intf)]: 
             intf_a = node_a.intf_L[node_a_intf]
             intf_b = node_b.intf_L[node_b_intf]
             pkt_S = intf_a.get('out')
@@ -37,9 +33,11 @@ class Link:
             #otherwise transmit the packet
             try:
                 intf_b.put(pkt_S, 'in')
-                print('%s: transmitting packet "%s" on %s %s -> %s, %s' % (self, pkt_S, node_a, node_a_intf, node_b, node_b_intf))
+                print('%s: direction %s-%s -> %s-%s: transmitting packet "%s"' % \
+                    (self, node_a, node_a_intf, node_b, node_b_intf, pkt_S))
             except queue.Full:
-                print('%s: packet lost' % (self))
+                print('%s: direction %s-%s -> %s-%s: packet lost' % \
+                    (self, node_a, node_a_intf, node_b, node_b_intf))
                 pass
         
         

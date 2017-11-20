@@ -2,3 +2,6 @@ __pycache*
 *.pyc
 *.sublime-project
 *.sublime-workspace
+.python-version
+bin/python3.6
+lib/python*
