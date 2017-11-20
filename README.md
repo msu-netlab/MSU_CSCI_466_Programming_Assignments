@@ -117,6 +117,7 @@ Submit a YouTube video link showing the execution of `simulation.py` forwarding 
 	Now change the link costs in that network such that packets from `Host 1` to `Host 3` follow a different path than packets from `Host 3` to `Host 1.`
 
 Submit a YouTube video link showing the execution of `simulation.py` forwarding packets between the hosts on two different paths.
+Make sure your output shows the final routing tables and the forwarding decisions made by routers.
 Also submit your code for this scenario as `link_3.py`, `network_3.py`, and `simulation_3.py`.
 
 
