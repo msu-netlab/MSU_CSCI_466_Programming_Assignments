@@ -44,7 +44,7 @@ At a high level a network defined in `simulation.py` includes hosts, routers and
 `Routers` also exchange routing tables to establish forwarding paths.
 `Links` connect network interfaces of routers and hosts. 
 Finally, the `LinkLayer` forwards traffic along links. 
-Please consult the [video lecture](videos/CSCI_466_PA4_tutorial.mp4) for a more in-depth explanation of the code.
+Please consult the [video lecture](https://www.youtube.com/watch?v=vsB5zJLCU2k) for a more in-depth explanation of the code.
 
 ### Program Invocation
 
