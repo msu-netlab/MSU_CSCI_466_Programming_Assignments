@@ -1,12 +1,50 @@
-'''
-Created on Oct 12, 2016
-
-@author: mwitt_000
-'''
-
 import queue
 import threading
 import time
+
+## Implements a link layer frame
+# Needed to tell the network layer the type of the payload
+class LinkFrame:
+    ## packet encoding lengths
+    type_S_length = 1
+
+    ##@param type_S: type of packet in the frame - what higher layer should handle it
+    # @param data_S: frame payload
+    def __init__(self, type_S, data_S):
+        self.type_S = type_S
+        self.data_S = data_S
+
+    ## called when printing the object
+    def __str__(self):
+        return self.to_byte_S()
+
+    ## convert frame to a byte string for transmission over links
+    def to_byte_S(self):
+        byte_S = ''
+        if self.type_S == 'MPLS':
+            byte_S += 'M' # of length type_S_length
+        elif self.type_S == 'Network':
+            byte_S += 'N'
+        else:
+            raise('%s: unknown type_S option: %s' %(self, self.type_S))
+        byte_S += self.data_S
+        return byte_S
+
+    ## extract a frame object from a byte string
+    # @param byte_S: byte string representation of the packet
+    @classmethod
+    def from_byte_S(self, byte_S):
+        type_S = byte_S[0 : self.type_S_length]
+        if type_S == 'M':
+            type_S = 'MPLS'
+        elif type_S == 'N':
+            type_S = 'Network'
+        else:
+            raise('%s: unknown type_S field: %s' % (self, type_S))
+        data_S = byte_S[self.type_S_length: ]        
+        return self(type_S, data_S)
+
+    
 
 ## An abstraction of a link between router interfaces
 class Link:
@@ -29,7 +67,9 @@ class Link:
         
     ##transmit a packet between interfaces in each direction
     def tx_pkt(self):
-        for (node_a, node_a_intf, node_b, node_b_intf) in [(self.node_1, self.node_1_intf, self.node_2, self.node_2_intf), (self.node_2, self.node_2_intf, self.node_1, self.node_1_intf)]: 
+        for (node_a, node_a_intf, node_b, node_b_intf) in \
+        [(self.node_1, self.node_1_intf, self.node_2, self.node_2_intf), 
+         (self.node_2, self.node_2_intf, self.node_1, self.node_1_intf)]: 
             intf_a = node_a.intf_L[node_a_intf]
             intf_b = node_b.intf_L[node_b_intf]
             if intf_a.out_queue.empty():
@@ -46,7 +86,7 @@ class Link:
                     intf_a.next_avail_time = time.time() + pkt_size/intf_a.capacity                
                     print('%s: transmitting packet "%s" on %s %s -> %s, %s \n' \
                           ' - seconds until the next available time %f\n' \
-                          ' - queue size %d\n' \
+                          ' - queue size %d' \
                           % (self, pkt_S, node_a, node_a_intf, node_b, node_b_intf, intf_a.next_avail_time - time.time(), intf_a.out_queue.qsize()))
                 # uncomment the lines below to see waiting time until next transmission
 #                 else:
