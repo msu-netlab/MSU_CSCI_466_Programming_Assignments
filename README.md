@@ -5,13 +5,13 @@
 
 
 Complete the following assignment in pairs, or groups of three. 
-Submit your work into the Dropbox on D2L into the “Programming Assignment 5” folder. 
+Submit your work on D2L into the “Programming Assignment 5” folder. 
 All partners will submit the same solution and we will only grade one solution for each group.
 
 
 ## Learning Objectives
 
-In this lab you will:
+In this programming assignment you will:
 
 - Implement MPLS forwarding on routers
 - Control forwarding paths using MPLS labels
@@ -21,7 +21,7 @@ In this lab you will:
 ## Overview
 
 In this project, you will implement MPLS forwarding and priority-based forwarding at routers.
-In this assignment you will also have a greater autonomy over and responsibility for the design of your protocol based on the requirements. 
+You will also have a greater autonomy over and responsibility for the design of your protocol based on the requirements. 
 
 ### Starting Code 
 
@@ -37,13 +37,13 @@ The code also includes `simulation.py` that manages the threads running the diff
 ![image](images/simple.png)
 <!-- <img src="images/simple.png" alt="Drawing" style="width:400pt; height:100pt"/> -->
 
-At a high level a network defined in `simulation.py` includes hosts, routers and links. 
+At a high level the network includes hosts, routers and links. 
 `Hosts` generate and receive traffic. 
-`Routers` encapsulate packets as MPLS frames, forward them based on MPLS tables, and decapsulate them on the last hop to deliver network traffic to hosts.
+`Routers` forward packets between interfaces.
 `Links` connect network interfaces of routers and hosts. 
-Finally, the `LinkLayer` forwards traffic along links.
+Finally, the `LinkLayer` implements a thread that forwards traffic along links.
 In this assignment forwarding speed is restricted by link capacity. 
-Please consult the [video lecture](https://www.youtube.com/watch?v=vsB5zJLCU2k) for a more in-depth explanation of the code.
+<!-- Please consult the [video lecture](https://www.youtube.com/watch?v=vsB5zJLCU2k) for a more in-depth explanation of the code. -->
 
 ### Program Invocation
 
@@ -67,8 +67,8 @@ As the network becomes more complex and takes longer to execute, you may need to
 
 	![image](images/MPLS_header.png)
 
-	In this project we simplify Ethrnet frame as `LinkFrame` in `link.py` and IP as `NetworkPacket` in `network.py`.
-	`LinkFrame` carries both `MPLSFrames` and `NetworkPackets` and its `type_S` field allows the newtork process at the `Router` to differentiate between the two and handle them appropriately.
+	In this project we simplify Ethernet frame as `LinkFrame` in `link.py` and IP as `NetworkPacket` in `network.py`.
+	`LinkFrame` carries both `MPLSFrames` and `NetworkPackets` and its `type_S` field allows the network process at the `Router` to differentiate between the two and handle them appropriately.
 
 	Your task is to implement `MPLSFrame` to encapsulate `NetworkPackets`.
 	Encapsulation should take place on the first hop router according the the rules defined in `encap_tbl_D` parameter to the `Router`. 
@@ -131,8 +131,8 @@ Add transmissions from `Host 1` and `Host 2` to `Host 3` and configure MPLS tabl
 
 	Submit your code as `link_3.py`, `network_3.py`, and `simulation_3.py`.
 	Submit a YouTube video link showing the execution of `simulation_3.py`.
-	We will grade you based on correct implementation of strict prioritization in MPLS.
-	Make sure these to explain your approach to 3.c and clearly show that you achieve strict prioirity forwarding in your output and the video.
+	We will grade you based on correct implementation of strict priority forwarding in MPLS.
+	Make sure these to explain your approach to 3.c and clearly show that you achieve strict priority forwarding in your output and the video.
 
 
 
