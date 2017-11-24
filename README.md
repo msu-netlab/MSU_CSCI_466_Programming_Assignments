@@ -34,8 +34,8 @@ DATA LINK LAYER (link.py)
 
 The code also includes `simulation.py` that manages the threads running the different network objects. Currently, `simulation.py` defines the following network.
 
-<!-- ![image](images/simple.png) -->
-<img src="images/simple.png" alt="Drawing" style="width:400pt; height:100pt"/>
+![image](images/simple.png)
+<!-- <img src="images/simple.png" alt="Drawing" style="width:400pt; height:100pt"/> -->
 
 At a high level a network defined in `simulation.py` includes hosts, routers and links. 
 `Hosts` generate and receive traffic. 
@@ -60,99 +60,90 @@ As the network becomes more complex and takes longer to execute, you may need to
 
 ## Assignment
 
-1. [X points] Implement MPLS forwarding
+1. [10 points] Implement MPLS forwarding such that only links incident on hosts carry `NetworkPackets` and links between routers only carry `MPLSFrames'.
 
-	a. [X points] Implement MPLS frame class to encapsulate NetworkPackets. 
-	When a NetworkPacket arrives from a host at a router, the router should encapsulate the packet in an MPLS frame. 
-	In the slides we presented the MPLS frame structure and position with respect to link (Ethernet) and
-network (IP) layer packets as:
+	a. [4 points] Implement the `MPLSFrame` class to encapsulate `NetworkPackets` as MPLS frames.
+	In the lectures slides we presented the MPLS frame structure and position with respect to link (Ethernet) and network (IP) layer packets as:
 
-	<!-- ![image](images/simple.png) -->
-	<img src="images/simple.png" alt="Drawing" style="width:400pt; height:100pt"/>
+	![image](images/MPLS_header.png)
 
-	In the context of this project, where we have no link-layer frame and we do have a NetworkPacket,
-your transmissions should look like:
+	In this project we simplify Ethrnet frame as `LinkFrame` in `link.py` and IP as `NetworkPacket` in `network.py`.
+	`LinkFrame` carries both `MPLSFrames` and `NetworkPackets` and its `type_S` field allows the newtork process at the `Router` to differentiate between the two and handle them appropriately.
 
-	<!-- ![image](images/simple.png) -->
-	<img src="images/simple.png" alt="Drawing" style="width:400pt; height:100pt"/>
-
+	Your task is to implement `MPLSFrame` to encapsulate `NetworkPackets`.
+	Encapsulation should take place on the first hop router according the the rules defined in `encap_tbl_D` parameter to the `Router`. 
+	The structure of that table is up to you to define. 
+	Similarly, you do not need to implement all the fields of an MPLS frame.
 	The MPLS frame should contain the label at the least. 
-	You may add experimental bits, S bit, and time to live if you choose. 
+	You may add experimental bits, S bit, and time to live if you choose.
+	You will need to modify `Router.process_network_packet()` to implement MPLS encapsulation.
 
-	b. [X points] Modify `Router()` constructor to accept MPLS forwarding tables. 
-	The tables should contain the in label, in intf, out label, and out intf. 
-	Pass in correctly designed forwarding tables so that your routers achieve end-to-end connectivity and forward traffic from different hosts on different paths.
+	b. [4 points] Implement MPLS forwarding based on MPLS forwarding tables passed to the `Router` constructor as `frwd_tbl_D`.
+	The structure of `frwd_tbl_D` is up to you, but the tables should contain the in label, in interface, out label, and out interface.
+	For each router, pass in correctly designed forwarding tables so that your routers achieve end-to-end connectivity and forward traffic from different hosts on different paths.
+	You will need to modify `Router.process_queues()` and `Router.process_MPLS_frame()` to implement MPLS forwarding.
 
-	c. [X points] Modify Router.forward packet() function to encapsulate and decapsulate packets and
-to forward MPLS frames. 
-	Only links incident on hosts should carry NetworkPackets. 
-	Other links should only carry MPLS frames.
+	c. [2 points] Implement MPLS decapsulation at last hop router to deliver `NetworkPacket` to end hosts.
+	Decapsulation should take place according to the rules defined in `decap_tbl_D` parameter to the `Router`.
+	The structure of that table is up to you to define. 
+	You will need to modify `Router.process_MPLS_frame()` to implement MPLS decapsulation and forwarding.
 
 
-Submit a YouTube video link showing the execution of `simulation.py` until routing tables converge.
-	We will grade you based on the formatting routing tables, the content of your route update messages, and the final state of your routing tables.
-	Make sure that all of these are clearly visible in your output.
 	Submit your code as `link_1.py`, `network_1.py`, and `simulation_1.py`.
-
-
-
-2. [X points] Your next task is to implement MPLS forwarding, such that packets from different hosts follow different paths. 
-In this part use the following topology, with both Host 1 and Host 2 sending packets to Host 3.
-As before, you should control the forwading between routers using MPLS tables passed to `Router` constructors.
-
-	<img src="images/complex.png" alt="Drawing" style="width:400pt; height:100pt"/>
-	<!-- ![image](images/complex.png)  -->
-
-Submit a YouTube video link showing the execution of `simulation.py` until routing tables converge.
-	We will grade you based on the formatting routing tables, the content of your route update messages, and the final state of your routing tables.
-	Make sure that all of these are clearly visible in your output.
-	Submit your code as `link_1.py`, `network_1.py`, and `simulation_1.py`.
-
-3. [X points]
-
-	Implement priority forwarding on your MPLS routers. Remember that priority is origi- nally carried in the NetworkPacket. You will need to devise a method for your routers to somehow have access to packet priority (there are three good alternative solutions for implementing this).
-
-	When running the code you will notice a bottleneck exists on the outgoing interface 0 of
-Router B. The output shows you the remaining queue size after a packet is transmitted over a link. Your
-first task is to implement strict priority forwarding to make sure that higher priority packets skip over
-lower priority packets in the outgoing queue.
-
-	a. [3 points] The udt send() function in simulation.py sends packet with priorities 0 and 1. Assume higher number priorities are higher priorities, i.e. 1 is higher than 0. Extend the NetworkPacket to carry the priority number with which it was sent.
-	
-	b. [3 points] At each router implement strict priority forwarding. My suggestion would be to change the implementation of Interface.get(), but other approaches are possible as well.
-	
-	c. [3 points] Modify the output to show that packets with priority 1 are forwarded first if the interface outgoing queue has packets of mixed priorities. Specifically the current output shows the queue size of an outgoing interface as: 
-
-	```
-	Link Host_1-0 - Router_A-0: transmitting packet ...
-	- seconds until the next available time 0.416000
-	- queue size 3
-	```
-	Modify that output to show the number of packets queued at each priority level as:
-	
-	```
-	Link Host_1-0 - Router_A-0: transmitting packet ...
-	- seconds until the next available time 0.416000
-	- queue size 3: priority 0: X packets, priority 1: Y packets
-	```
-
-	d. [1 point] Make sure that output at the host shows what priority packet has been received. Hint: you should be able to get this ‘for free’ by correctly modifying NetworkPacket to carry the priority. 
+	Submit a YouTube video link showing the execution of `simulation_1.py`.
+	We will grade you based on correct forwarding actions and content of your MPLS frames.
+	Make sure that all of these are clearly visible in your output and the video.
 	
 
-Submit a YouTube video link showing the execution of `simulation.py` until routing tables converge.
-	We will grade you based on the formatting routing tables, the content of your route update messages, and the final state of your routing tables.
-	Make sure that all of these are clearly visible in your output.
-	Submit your code as `link_1.py`, `network_1.py`, and `simulation_1.py`.
+
+
+2. [5 points] Implement MPLS forwarding forwarding, such that packets from different hosts follow different paths.
+Configure the more complex network shown below in `simulation.py`.
+Add transmissions from `Host 1` and `Host 2` to `Host 3` and configure MPLS tables such that routers encapsulate `NetworkPackets` as `MPLSFrames` and forward the packets from the different hosts on different paths.
+
+
+	<!-- <img src="images/complex.png" alt="Drawing" style="width:400pt; height:100pt"/> -->
+	![image](images/complex.png)  
+
+	Submit your code as `link_2.py`, `network_2.py`, and `simulation_2.py`.
+	Submit a YouTube video link showing the execution of `simulation_2.py`.
+	We will grade you based on correct forwarding actions.
+	Make sure these are clearly visible in your output and the video.
+
+3. [10 points] Implement strict priority forwarding on the MPLS routers. 
+
+	a. [2 points] Recall that the IP header has a type of service~(TOS) field that carries packet priority.
+	`NetworkPacket` constructor in this assignment has a `priority` argument, though it is currently unused.
+	The `udt_send()` function in simulation.py sends packet with priorities 0 and 1. 
+	Assume higher number priorities are higher priorities, i.e. 1 is higher than 0. 
+	Extend `NetworkPacket` to carry the priority number with which it was sent.
+
+	b. [3 points] Recall that forwarding at this layer accounts for link capacities.
+	You will notice a bottleneck at `Router B` in problem 1, where queued packets take a while to offload.
+	Implement a similar bottleneck at `Router D` in the network from problem 2.
+	Change the program output to show how many packets of each priority remain queued at each router.
+	You may inspect the priority in the encapsulated `NetworkPackets` to do so.
+
+	c. [5 points] Implement strict priority forwarding at each router.
+	While in 2.b you 'cheat' by looking at `NetworkPacket` priority, MPLS forwarding should be done while looking only at the MPLS header.
+	However, the MPLS header does not carry a priority field and you should not extend it to do so.
+	Devise and implement another method, such that the MPLS forward the encapsulated packets with strict priority.
+
+	Submit your code as `link_3.py`, `network_3.py`, and `simulation_3.py`.
+	Submit a YouTube video link showing the execution of `simulation_3.py`.
+	We will grade you based on correct implementation of strict prioritization in MPLS.
+	Make sure these to explain your approach to 3.c and clearly show that you achieve strict prioirity forwarding in your output and the video.
+
 
 
 4. [1 point] BONUS: Implement Weighted fair queuing (WFQ) instead of strict priority in question 3.
 
-Submit `link_4.py`, `network_4.py`, and `simulation_4.py`.
+	Submit `link_4.py`, `network_4.py`, and `simulation_4.py`.
 
 
 5. [1 point] BONUS: Implement a central controller to automatically configure MPLS forwarding tables in question 2 based on a global knowledge of network topology. 
 
-Submit `link_5.py`, `network_5.py`, and `simulation_5.py`.
+	Submit `link_5.py`, `network_5.py`, and `simulation_5.py`.
 
 
 
