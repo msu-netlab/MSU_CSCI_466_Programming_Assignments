@@ -43,7 +43,7 @@ At a high level the network includes hosts, routers and links.
 `Links` connect network interfaces of routers and hosts. 
 Finally, the `LinkLayer` implements a thread that forwards traffic along links.
 In this assignment forwarding speed is restricted by link capacity. 
-<!-- Please consult the [video lecture](https://www.youtube.com/watch?v=vsB5zJLCU2k) for a more in-depth explanation of the code. -->
+Please consult the [video lecture](https://www.youtube.com/watch?v=nNLOUlj6MMc) for a more in-depth explanation of the code.
 
 ### Program Invocation
 
@@ -60,7 +60,7 @@ As the network becomes more complex and takes longer to execute, you may need to
 
 ## Assignment
 
-1. [10 points] Implement MPLS forwarding such that only links incident on hosts carry `NetworkPackets` and links between routers only carry `MPLSFrames'.
+1. [10 points] Implement MPLS forwarding such that only links incident on hosts carry `NetworkPackets` and links between routers only carry `MPLSFrames`.
 
 	a. [4 points] Implement the `MPLSFrame` class to encapsulate `NetworkPackets` as MPLS frames.
 	In the lectures slides we presented the MPLS frame structure and position with respect to link (Ethernet) and network (IP) layer packets as:
@@ -97,7 +97,7 @@ As the network becomes more complex and takes longer to execute, you may need to
 
 
 
-2. [5 points] Implement MPLS forwarding forwarding, such that packets from different hosts follow different paths.
+2. [5 points] Implement MPLS forwarding, such that packets from different hosts follow different paths.
 Configure the more complex network shown below in `simulation.py`.
 Add transmissions from `Host 1` and `Host 2` to `Host 3` and configure MPLS tables such that routers encapsulate `NetworkPackets` as `MPLSFrames` and forward the packets from the different hosts on different paths.
 
