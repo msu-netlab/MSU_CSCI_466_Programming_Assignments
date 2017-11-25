@@ -122,12 +122,12 @@ Add transmissions from `Host 1` and `Host 2` to `Host 3` and configure MPLS tabl
 	You will notice a bottleneck at `Router B` in problem 1, where queued packets take a while to offload.
 	Implement a similar bottleneck at `Router D` in the network from problem 2.
 	Change the program output to show how many packets of each priority remain queued at each router.
-	You may inspect the priority in the encapsulated `NetworkPackets` to do so.
+	You may inspect the priority in the encapsulated `NetworkPackets` to do so, or devise another method.
 
 	c. [5 points] Implement strict priority forwarding at each router.
-	While in 2.b you 'cheat' by looking at `NetworkPacket` priority, MPLS forwarding should be done while looking only at the MPLS header.
+	While in 2.b you may 'cheat' by looking at `NetworkPacket` priority, MPLS forwarding should be done while looking only at the MPLS header.
 	However, the MPLS header does not carry a priority field and you should not extend it to do so.
-	Devise and implement another method, such that the MPLS forward the encapsulated packets with strict priority.
+	Devise and implement another method, such that the MPLS routers encapsulate `NetworkPackets` at the edge and forward them (on different paths as in problem 2) with strict priority.
 
 	Submit your code as `link_3.py`, `network_3.py`, and `simulation_3.py`.
 	Submit a YouTube video link showing the execution of `simulation_3.py`.

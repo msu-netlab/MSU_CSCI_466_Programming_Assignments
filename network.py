@@ -52,7 +52,6 @@ class NetworkPacket:
     
     ##@param dst: address of the destination host
     # @param data_S: packet payload
-    # @param prot_S: upper layer protocol for the packet (data, or control)
     # @param priority: packet priority
     def __init__(self, dst, data_S, priority=0):
         self.dst = dst
@@ -100,7 +99,7 @@ class Host:
         print('%s: sending packet "%s" with priority %d' % (self, pkt, priority))
         #encapsulate network packet in a link frame (usually would be done by the OS)
         fr = LinkFrame('Network', pkt.to_byte_S())
-        #enque frame onto the interface for transmmission
+        #enque frame onto the interface for transmission
         self.intf_L[0].put(fr.to_byte_S(), 'out') 
         
     ## receive frame from the link layer
@@ -140,9 +139,7 @@ class Router:
         self.stop = False #for thread termination
         self.name = name
         #create a list of interfaces
-        self.intf_L = []
-        for i in range(len(intf_capacity_L)):
-            self.intf_L.append(Interface(max_queue_size, intf_capacity_L[i]))
+        self.intf_L = [Interface(max_queue_size, intf_capacity_L[i]) for i in range(len(intf_capacity_L))]
         #save MPLS tables
         self.encap_tbl_D = encap_tbl_D
         self.frwd_tbl_D = frwd_tbl_D
