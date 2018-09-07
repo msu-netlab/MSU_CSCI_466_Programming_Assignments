@@ -22,135 +22,94 @@ In this programming assignment you will:
 
 In this lab you will write a distributed implementation of the 
 [Battleship](https://en.wikipedia.org/wiki/Battleship_\(game\)).
-We will use the standard \href{https://en.wikipedia.org/wiki/Battleship_(game)#Description}{10x10 variation of the game}.
-Here is an \href{http://www.battleshiponline.org/}{online implementation} of the Battleship game.
-\emph{Note that the ships in that implementation have slightly different names.}
+We will use the standard [10x10 variation of the game](https://en.wikipedia.org/wiki/Battleship_\(game\)#Description).
+Here is an [online implementation](http://www.battleshiponline.org/) of the Battleship game.
+*Note that the ships in that implementation have slightly different names.*
 
 Our implementation will be based on a symmetric client server architecture, where each player has both a server and a client.
 The server keeps an internal state of the game and issues replies to the other player's client.
 
 
-### Starting Code 
 
-The code provides you with the implementation several network layers that cooperate to provide end-to-end communication. 
+##Board Setup
 
-```
-NETWORK LAYER (network.py) 
-DATA LINK LAYER (link.py) 
-```
-
-The code also includes `simulation.py` that manages the threads running the different network objects. Currently, `simulation.py` defines the following network.
-
-![image](images/simple.png)
-<!-- <img src="images/simple.png" alt="Drawing" style="width:400pt; height:100pt"/> -->
-
-At a high level the network includes hosts, routers and links. 
-`Hosts` generate and receive traffic. 
-`Routers` forward packets between interfaces.
-`Links` connect network interfaces of routers and hosts. 
-Finally, the `LinkLayer` implements a thread that forwards traffic along links.
-In this assignment forwarding speed is restricted by link capacity. 
-Please consult the [video lecture](https://www.youtube.com/watch?v=nNLOUlj6MMc) for a more in-depth explanation of the code.
-
-### Program Invocation
-
-To run the starting code you may execute:
+The first step before the game begins is the setup of the board, according to the [rules of the game](https://en.wikipedia.org/wiki/Battleship_\(game\)#Description).
+We will represent the board with a character array, where `_` represents water and Carrier, Battleship, cRuiser, Submarine, and Destroyer fields are represented by `C`, `B`, `R`, `S`, `D` respectively. 
+For example, your board might be set up as follows:
 
 ```
-python simulation.py
+CCCCC_____
+BBBB______
+RRR_______
+SSS_______
+D_________
+D_________
+__________
+__________
+__________
+__________
 ```
 
-The current `simulation_time` in `simulation.py` is __10 second__ to account for the delay of packet forwarding. 
-As the network becomes more complex and takes longer to execute, you may need to extend the simulation to allow all the packets to be transfered.
+You will save your board as `board.txt`.
+
+###Messages
+
+In class we will design a set of messages to be exchanged between the client and the server.
+The `fire` message needs to communicate the grid location of salvo.
+The `result` message needs to communicate whether the salvo was a hit, a sink, or a miss.
+
+Here is the format of messages we will use.
+The `fire` message will be represented as an `HTTP POST` request.
+The content of the fire message will include the targeted coordinates as a [URL formatted string for Web forms](\href{https://en.wikipedia.org/wiki/Query_string#Web_forms), for example 5 and 7, as: `x=5\&y=7`.
+Assume that coordinates are 0-indexed.
+
+The `result` message will be formatted as an HTTP response.
+For a correctly formatted `fire` request your reply will be an `HTTP OK` message with `hit=` followed by `1` (hit), or `0` (miss).
+If the hit results in a sink, then the response will also include `sink=` followed by a letter code (`C`, `B`, `R`, `S`, `D`) of the sunk ship.
+An example of such a reply is `hit=1\&sink=D`.
+
+If the fire message includes coordinates that are out of bounds, the response will be `HTTP Not Found`.
+If the fire message includes coordinates that have been already fired opon, the response will be `HTTP GONE`.
+Finally, if the fire message is not formatted correctly, the response will be `HTTP Bad Request`.
+For your reference here's a [link](\href{https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to the different HTTP response status codes.
 
 
+###Program Invocation
 
-## Assignment
+Your server process should accept a port parameter, on which a client can connect, and the file containing the setup of your board, eg. 
 
-1. [10 points] Implement MPLS forwarding such that only links incident on hosts carry `NetworkPackets` and links between routers only carry `MPLSFrames`.
+`python server.py 5000 board.txt`.
 
-	a. [4 points] Implement the `MPLSFrame` class to encapsulate `NetworkPackets` as MPLS frames.
-	In the lectures slides we presented the MPLS frame structure and position with respect to link (Ethernet) and network (IP) layer packets as:
+Your client process should accept the IP address, the port of the server process, and the X and Y coordinates onto which to fire, eg. 
 
-	![image](images/MPLS_header.png)
+`python client.py 128.111.52.245 5000 5 7`.
 
-	In this project we simplify Ethernet frame as `LinkFrame` in `link.py` and IP as `NetworkPacket` in `network.py`.
-	`LinkFrame` carries both `MPLSFrames` and `NetworkPackets` and its `type_S` field allows the network process at the `Router` to differentiate between the two and handle them appropriately.
-
-	Your task is to implement `MPLSFrame` to encapsulate `NetworkPackets`.
-	Encapsulation should take place on the first hop router according the the rules defined in `encap_tbl_D` parameter to the `Router`. 
-	The structure of that table is up to you to define. 
-	Similarly, you do not need to implement all the fields of an MPLS frame.
-	The MPLS frame should contain the label at the least. 
-	You may add experimental bits, S bit, and time to live if you choose.
-	You will need to modify `Router.process_network_packet()` to implement MPLS encapsulation.
-
-	b. [4 points] Implement MPLS forwarding based on MPLS forwarding tables passed to the `Router` constructor as `frwd_tbl_D`.
-	The structure of `frwd_tbl_D` is up to you, but the tables should contain the in label, in interface, out label, and out interface.
-	For each router, pass in correctly designed forwarding tables so that your routers achieve end-to-end connectivity and forward traffic from different hosts on different paths.
-	You will need to modify `Router.process_queues()` and `Router.process_MPLS_frame()` to implement MPLS forwarding.
-
-	c. [2 points] Implement MPLS decapsulation at last hop router to deliver `NetworkPacket` to end hosts.
-	Decapsulation should take place according to the rules defined in `decap_tbl_D` parameter to the `Router`.
-	The structure of that table is up to you to define. 
-	You will need to modify `Router.process_MPLS_frame()` to implement MPLS decapsulation and forwarding.
+The client will be invoked multiple times during the game.
 
 
-	Submit your code as `link_1.py`, `network_1.py`, and `simulation_1.py`.
-	Submit a YouTube video link showing the execution of `simulation_1.py`.
-	We will grade you based on correct forwarding actions and content of your MPLS frames.
-	Make sure that all of these are clearly visible in your output and the video.
-	
+###Internal State Representation
+Following each `fire` message the server should update the state of the player's board (whether a player's ship has been hit and where).
+Following each `result` message the client should update the record of the player's shots onto the opponent's board.
+A player should be able able to visually inspect their own board and their record of opponent's board on `\url{http://localhost:5000/own_board.html` and `\url{http://localhost:5000/opponent_board.html` respectively.
+It is up to you how you visually represent the state of each board, however, I will award __one bonus point__ to the group with the most visually appealing representation.
 
 
+###BONUS
+I will also award __one bonus point__ to any group that implements the Version 1 rules of the [Battleship: Advanced Missions](https://en.wikipedia.org/wiki/Electronic_Battleship:_Advanced_Mission) variant of the game.
 
-2. [5 points] Implement MPLS forwarding, such that packets from different hosts follow different paths.
-Configure the more complex network shown below in `simulation.py`.
-Add transmissions from `Host 1` and `Host 2` to `Host 3` and configure MPLS tables such that routers encapsulate `NetworkPackets` as `MPLSFrames` and forward the packets from the different hosts on different paths.
-
-
-	<!-- <img src="images/complex.png" alt="Drawing" style="width:400pt; height:100pt"/> -->
-	![image](images/complex.png)  
-
-	Submit your code as `link_2.py`, `network_2.py`, and `simulation_2.py`.
-	Submit a YouTube video link showing the execution of `simulation_2.py`.
-	We will grade you based on correct forwarding actions.
-	Make sure these are clearly visible in your output and the video.
-
-3. [10 points] Implement strict priority forwarding on the MPLS routers. 
-
-	a. [2 points] Recall that the IP header has a type of service~(TOS) field that carries packet priority.
-	`NetworkPacket` constructor in this assignment has a `priority` argument, though it is currently unused.
-	The `udt_send()` function in simulation.py sends packet with priorities 0 and 1. 
-	Assume higher number priorities are higher priorities, i.e. 1 is higher than 0. 
-	Extend `NetworkPacket` to carry the priority number with which it was sent.
-
-	b. [3 points] Recall that forwarding at this layer accounts for link capacities.
-	You will notice a bottleneck at `Router B` in problem 1, where queued packets take a while to offload.
-	Implement a similar bottleneck at `Router D` in the network from problem 2.
-	Change the program output to show how many packets of each priority remain queued at each router.
-	You may inspect the priority in the encapsulated `NetworkPackets` to do so, or devise another method.
-
-	c. [5 points] Implement strict priority forwarding at each router.
-	While in 2.b you may 'cheat' by looking at `NetworkPacket` priority, MPLS forwarding should be done while looking only at the MPLS header.
-	However, the MPLS header does not carry a priority field and you should not extend it to do so.
-	Devise and implement another method, such that the MPLS routers encapsulate `NetworkPackets` at the edge and forward them (on different paths as in problem 2) with strict priority.
-
-	Submit your code as `link_3.py`, `network_3.py`, and `simulation_3.py`.
-	Submit a YouTube video link showing the execution of `simulation_3.py`.
-	We will grade you based on correct implementation of strict priority forwarding in MPLS.
-	Make sure these to explain your approach to 3.c and clearly show that you achieve strict priority forwarding in your output and the video.
+##What to Submit
 
 
+* \[2 points\] Find a partner.
+Submit `partners.txt` with your partner's, or partners' first and last name.
 
-4. [1 point] BONUS: Implement Weighted fair queuing (WFQ) instead of strict priority in question 3.
+* \[3 points\] `message\_format.txt` -- A text file describing the message formats you are using in your implementation. 
 
-	Submit `link_4.py`, `network_4.py`, and `simulation_4.py`.
+* \[10 points\] `server.py` -- your working Python implementation of your server process.
+Note: code that does not compile, or crashes will receive zero credit.
 
+* \[10 points\] `client.py` -- your working Python implementation of your client process. 
+Note: code that does not compile, or crashes will receive zero credit.
 
-5. [1 point] BONUS: Implement a central controller to automatically configure MPLS forwarding tables in question 2 based on a global knowledge of network topology. 
-
-	Submit `link_5.py`, `network_5.py`, and `simulation_5.py`.
-
-
-
+* \[1 points\] (BONUS) `client_am.py` and `server_am.py` -- implementing the Advanced Missions rules of the Battleship game.
+Please also include `BONUS\_README.txt` that explains any changes into how the client program should be invoked.
