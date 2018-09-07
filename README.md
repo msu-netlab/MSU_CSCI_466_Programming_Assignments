@@ -1,4 +1,4 @@
-# CSCI 466 Programming Assignment - MPLS 
+# CSCI 466 Programming Assignment - Battleship Network Application 
 
 ## Instructions
 ### Due: 12/12/17 11:59PM
