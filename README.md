@@ -5,7 +5,7 @@
 
 
 Complete the following assignment in pairs, or groups of three. 
-Submit your work on D2L into the “Programming Assignment 5” folder. 
+Submit your work on D2L into the "Programming Assignment 1" folder. 
 All partners will submit the same solution and we will only grade one solution for each group.
 
 
@@ -13,15 +13,22 @@ All partners will submit the same solution and we will only grade one solution f
 
 In this programming assignment you will:
 
-- Implement MPLS forwarding on routers
-- Control forwarding paths using MPLS labels
-- Implement priority-based forwarding on routers
+- Write a client-server application
+- Communicate using HTTP
+- Design a messaging standard
 
 
 ## Overview
 
-In this project, you will implement MPLS forwarding and priority-based forwarding at routers.
-You will also have a greater autonomy over and responsibility for the design of your protocol based on the requirements. 
+In this lab you will write a distributed implementation of the 
+[Battleship](https://en.wikipedia.org/wiki/Battleship_\(game\)).
+We will use the standard \href{https://en.wikipedia.org/wiki/Battleship_(game)#Description}{10x10 variation of the game}.
+Here is an \href{http://www.battleshiponline.org/}{online implementation} of the Battleship game.
+\emph{Note that the ships in that implementation have slightly different names.}
+
+Our implementation will be based on a symmetric client server architecture, where each player has both a server and a client.
+The server keeps an internal state of the game and issues replies to the other player's client.
+
 
 ### Starting Code 
 
