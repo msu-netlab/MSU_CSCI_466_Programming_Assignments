@@ -109,14 +109,32 @@ I will award __one bonus point__ for each of the following:
 
 ## What to Submit
 
-* \[5 points\] Find a partner.
+* \[2 points\] Find a partner.
 Submit `partners.txt` with your partner's, or partners' first and last name.
 
-* \[10 points\] `server.py` -- your working Python implementation of your server process.
-Note: code that does not compile, or crashes will receive zero credit.
+* \[20 points\] `server.py` and `client.py` -- your working Python implementation of your server process. 
+A YouTube video link showing the execution of your program.
+Videos must be under 5 minutes in length - videos longer than that will not be graded.
 
-* \[10 points\] `client.py` -- your working Python implementation of your client process. 
-Note: code that does not compile, or crashes will receive zero credit.
+* \[1 points\] (BONUS) `bonus1.png` -- a screenshot of the browser showing the visual representation of your board.
+
+* \[1 points\] (BONUS) `bonus2.js` -- your working implementation of a browser client.
+A YouTube video link showing the execution of your program.
 
 * \[1 points\] (BONUS) `client_am.py` and `server_am.py` -- implementing the Advanced Missions rules of the Battleship game.
-Please also include `BONUS_README.txt` that explains any changes into how the client program should be invoked.
+A YouTube video link showing the execution of your program.
+
+
+## Grading Rubric
+
+I will grade your submissions of the basic Battleship program from the YouTube video as follows:
+
+* \[2 points\] `server.py` shows the initial representation of player's own board
+* \[2 points\] `server.py` shows the initial representation of opponent's board
+* \[3 points\] `client.py` sends a correctly formatted `fire` message (may be shown in Wireshark)
+* \[5 points\] `server.py` correctly processes the `fire` message to update `own_board.txt`. Make sure to show all possible cases.
+* \[3 points\] `server.py` sends a correctly formatted `response` message (may be shown in Wireshark)
+* \[5 points\] `client.py` correctly processes the `result` message to update `opponent_board.txt`. Make sure to show all possible cases.
+
+
+
