@@ -1,7 +1,7 @@
-# CSCI 466 Programming Assignment - Battleship Network Application 
+# CSCI 466 PA1 - Battleship Network Application 
 
 ## Instructions
-### Due: 12/12/17 11:59PM
+### Due: 9/24/17 11:59PM
 
 
 Complete the following assignment in pairs, or groups of three. 
@@ -31,7 +31,7 @@ The server keeps an internal state of the game and issues replies to the other p
 
 
 
-##Board Setup
+## Board Setup
 
 The first step before the game begins is the setup of the board, according to the [rules of the game](https://en.wikipedia.org/wiki/Battleship_\(game\)#Description).
 We will represent the board with a character array, where `_` represents water and Carrier, Battleship, cRuiser, Submarine, and Destroyer fields are represented by `C`, `B`, `R`, `S`, `D` respectively. 
@@ -52,7 +52,7 @@ __________
 
 You will save your board as `board.txt`.
 
-###Messages
+### Messages
 
 In class we will design a set of messages to be exchanged between the client and the server.
 The `fire` message needs to communicate the grid location of salvo.
@@ -74,7 +74,7 @@ Finally, if the fire message is not formatted correctly, the response will be `H
 For your reference here's a [link](\href{https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to the different HTTP response status codes.
 
 
-###Program Invocation
+### Program Invocation
 
 Your server process should accept a port parameter, on which a client can connect, and the file containing the setup of your board, eg. 
 
@@ -87,23 +87,23 @@ Your client process should accept the IP address, the port of the server process
 The client will be invoked multiple times during the game.
 
 
-###Internal State Representation
+### Internal State Representation
 Following each `fire` message the server should update the state of the player's board (whether a player's ship has been hit and where).
 Following each `result` message the client should update the record of the player's shots onto the opponent's board.
 A player should be able able to visually inspect their own board and their record of opponent's board on `\url{http://localhost:5000/own_board.html` and `\url{http://localhost:5000/opponent_board.html` respectively.
 It is up to you how you visually represent the state of each board, however, I will award __one bonus point__ to the group with the most visually appealing representation.
 
 
-###BONUS
+## BONUS
 I will also award __one bonus point__ to any group that implements the Version 1 rules of the [Battleship: Advanced Missions](https://en.wikipedia.org/wiki/Electronic_Battleship:_Advanced_Mission) variant of the game.
 
-##What to Submit
+## What to Submit
 
 
 * \[2 points\] Find a partner.
 Submit `partners.txt` with your partner's, or partners' first and last name.
 
-* \[3 points\] `message\_format.txt` -- A text file describing the message formats you are using in your implementation. 
+* \[3 points\] `message_format.txt` -- A text file describing the message formats you are using in your implementation. 
 
 * \[10 points\] `server.py` -- your working Python implementation of your server process.
 Note: code that does not compile, or crashes will receive zero credit.
@@ -112,4 +112,4 @@ Note: code that does not compile, or crashes will receive zero credit.
 Note: code that does not compile, or crashes will receive zero credit.
 
 * \[1 points\] (BONUS) `client_am.py` and `server_am.py` -- implementing the Advanced Missions rules of the Battleship game.
-Please also include `BONUS\_README.txt` that explains any changes into how the client program should be invoked.
+Please also include `BONUS_README.txt` that explains any changes into how the client program should be invoked.
