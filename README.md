@@ -21,7 +21,7 @@ In this programming assignment you will:
 ## Overview
 
 In this lab you will write a distributed implementation of the 
-[Battleship](https://en.wikipedia.org/wiki/Battleship_\(game\)).
+[Battleship](https://en.wikipedia.org/wiki/Battleship_\(game\)) game.
 We will use the standard [10x10 variation of the game](https://en.wikipedia.org/wiki/Battleship_\(game\)#Description).
 Here is an [online implementation](http://www.battleshiponline.org/) of the Battleship game.
 *Note that the ships in that implementation have slightly different names.*
@@ -50,18 +50,18 @@ __________
 __________
 ```
 
-You will save your board as `board.txt`.
+You will save your board as `own_board.txt`.
 
 ### Messages
 
-In class we will design a set of messages to be exchanged between the client and the server.
+To play the game, your implementation needs to exchange two types of messages - `fire` and `result`.
 The `fire` message needs to communicate the grid location of salvo.
 The `result` message needs to communicate whether the salvo was a hit, a sink, or a miss.
 
-Here is the format of messages we will use.
-The `fire` message will be represented as an `HTTP POST` request.
-The content of the fire message will include the targeted coordinates as a [URL formatted string for Web forms](\href{https://en.wikipedia.org/wiki/Query_string#Web_forms), for example 5 and 7, as: `x=5\&y=7`.
+The `fire` message will be represented as an `HTTP POST`.
+The content of the fire message will include the targeted coordinates as a [URL formatted string for Web forms](\href{https://en.wikipedia.org/wiki/Query_string#Web_forms), for example 5 and 7, as: `x=5&y=7`.
 Assume that coordinates are 0-indexed.
+So, assuming that your opponent's server runs at `111.222.333.444:5555`, the `fire` message is a `POST` request sent to `http://111.222.333.444:5555?x=5&y=7`.
 
 The `result` message will be formatted as an HTTP response.
 For a correctly formatted `fire` request your reply will be an `HTTP OK` message with `hit=` followed by `1` (hit), or `0` (miss).
@@ -69,7 +69,7 @@ If the hit results in a sink, then the response will also include `sink=` follow
 An example of such a reply is `hit=1\&sink=D`.
 
 If the fire message includes coordinates that are out of bounds, the response will be `HTTP Not Found`.
-If the fire message includes coordinates that have been already fired opon, the response will be `HTTP GONE`.
+If the fire message includes coordinates that have been already fired opon, the response will be `HTTP Gone`.
 Finally, if the fire message is not formatted correctly, the response will be `HTTP Bad Request`.
 For your reference here's a [link](\href{https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to the different HTTP response status codes.
 
@@ -78,32 +78,39 @@ For your reference here's a [link](\href{https://en.wikipedia.org/wiki/List_of_H
 
 Your server process should accept a port parameter, on which a client can connect, and the file containing the setup of your board, eg. 
 
-`python server.py 5000 board.txt`.
+`python server.py 5000 own_board.txt`.
 
 Your client process should accept the IP address, the port of the server process, and the X and Y coordinates onto which to fire, eg. 
 
 `python client.py 128.111.52.245 5000 5 7`.
 
-The client will be invoked multiple times during the game.
+The client will be invoked multiple times during the game. 
 
 
 ### Internal State Representation
-Following each `fire` message the server should update the state of the player's board (whether a player's ship has been hit and where).
-Following each `result` message the client should update the record of the player's shots onto the opponent's board.
+Following each `fire` message the server should update the state of the player's `own_board.txt` (whether a player's ship has been hit and where).
+Following each `result` message the client should update the record of the player's shots onto the opponent's board, represented internally as `opponent_board.txt`.
 A player should be able able to visually inspect their own board and their record of opponent's board on `\url{http://localhost:5000/own_board.html` and `\url{http://localhost:5000/opponent_board.html` respectively.
-It is up to you how you visually represent the state of each board, however, I will award __one bonus point__ to the group with the most visually appealing representation.
+It is up to you how you visually represent the state of each board.
 
 
 ## BONUS
-I will also award __one bonus point__ to any group that implements the Version 1 rules of the [Battleship: Advanced Missions](https://en.wikipedia.org/wiki/Electronic_Battleship:_Advanced_Mission) variant of the game.
+
+I will award __one bonus point__ for each of the following:  
+
+* The group with the most visually appealing representation of game boards.
+
+* Any group that eliminates the need for client.py in favor of using a browser client. 
+  *Hint: Think about how to update files by replacing them*
+
+* Any group that implements the Version 1 rules of the [Battleship: Advanced Missions](https://en.wikipedia.org/wiki/Electronic_Battleship:_Advanced_Mission) variant of the game.
+
+
 
 ## What to Submit
 
-
-* \[2 points\] Find a partner.
+* \[5 points\] Find a partner.
 Submit `partners.txt` with your partner's, or partners' first and last name.
-
-* \[3 points\] `message_format.txt` -- A text file describing the message formats you are using in your implementation. 
 
 * \[10 points\] `server.py` -- your working Python implementation of your server process.
 Note: code that does not compile, or crashes will receive zero credit.
