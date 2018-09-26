@@ -90,7 +90,7 @@ The client will be invoked multiple times during the game.
 ### Internal State Representation
 Following each `fire` message the server should update the state of the player's `own_board.txt` (whether a player's ship has been hit and where).
 Following each `result` message the client should update the record of the player's shots onto the opponent's board, represented internally as `opponent_board.txt`.
-A player should be able able to visually inspect their own board and their record of opponent's board on `\url{http://localhost:5000/own_board.html` and `\url{http://localhost:5000/opponent_board.html` respectively.
+A player should be able able to visually inspect their own board and their record of opponent's board on `http://localhost:5000/own_board.html` and `http://localhost:5000/opponent_board.html` respectively.
 It is up to you how you visually represent the state of each board.
 
 
