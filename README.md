@@ -1,4 +1,4 @@
-# CSCI 466 PA1 - Battleship Network Application 
+# CSCI 466 PA2 - Reliable Data Transport (RDT)
 
 ## Instructions
 ### Due: 9/24/17 11:59PM
