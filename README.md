@@ -1,11 +1,11 @@
-# CSCI 466 PA2 - Reliable Data Transport (RDT)
+# CSCI 466 PA2 - Reliable Data Transmission (RDT)
 
 ## Instructions
 ### Due: 9/24/17 11:59PM
 
 
 Complete the following assignment in pairs, or groups of three. 
-Submit your work on D2L into the "Programming Assignment 1" folder. 
+Submit your work on D2L into the "Programming Assignment 2" folder. 
 All partners will submit the same solution and we will only grade one solution for each group.
 
 
@@ -13,128 +13,100 @@ All partners will submit the same solution and we will only grade one solution f
 
 In this programming assignment you will:
 
-- Write a client-server application
-- Communicate using HTTP
-- Design a messaging standard
+- Work with a layered network architecture
+- Understand and implement the Stop-and-Wait Protocol with ACK (Acknowledgments), NACK (Negative
+Acknowledgments), and re-transmissions
 
+## Assignment
 
-## Overview
-
-In this lab you will write a distributed implementation of the 
-[Battleship](https://en.wikipedia.org/wiki/Battleship_\(game\)) game.
-We will use the standard [10x10 variation of the game](https://en.wikipedia.org/wiki/Battleship_\(game\)#Description).
-Here is an [online implementation](http://www.battleshiponline.org/) of the Battleship game.
-*Note that the ships in that implementation have slightly different names.*
-
-Our implementation will be based on a symmetric client server architecture, where each player has both a server and a client.
-The server keeps an internal state of the game and issues replies to the other player's client.
+During this project, you will implement the Reliable Data Transmission protocols RDT 2.1, and RDT 3.0 discussed in class and the textbook by extending an RDT 1.0 implementation.
 
 
 
-## Board Setup
+### Starting Code
 
-The first step before the game begins is the setup of the board, according to the [rules of the game](https://en.wikipedia.org/wiki/Battleship_\(game\)#Description).
-We will represent the board with a character array, where `_` represents water and Carrier, Battleship, cRuiser, Submarine, and Destroyer fields are represented by `C`, `B`, `R`, `S`, `D` respectively. 
-For example, your board might be set up as follows:
+The starting code for this project provides you with the implementation of several network layers that cooperate to provide end-to-end communication.
 
 ```
-CCCCC_____
-BBBB______
-RRR_______
-SSS_______
-D_________
-D_________
-__________
-__________
-__________
-__________
+APPLICATION LAYER (client.py, server.py)
+TRANSPORT LAYER (rdt.py)
+NETWORK LAYER (network.py)
 ```
 
-You will save your board as `own_board.txt`.
-
-### Messages
-
-To play the game, your implementation needs to exchange two types of messages - `fire` and `result`.
-The `fire` message needs to communicate the grid location of salvo.
-The `result` message needs to communicate whether the salvo was a hit, a sink, or a miss.
-
-The `fire` message will be represented as an `HTTP POST`.
-The content of the fire message will include the targeted coordinates as a [URL formatted string for Web forms](\href{https://en.wikipedia.org/wiki/Query_string#Web_forms), for example 5 and 7, as: `x=5&y=7`.
-Assume that coordinates are 0-indexed.
-So, assuming that your opponent's server runs at `111.222.333.444:5555`, the `fire` message is a `POST` request sent to `http://111.222.333.444:5555?x=5&y=7`.
-
-The `result` message will be formatted as an HTTP response.
-For a correctly formatted `fire` request your reply will be an `HTTP OK` message with `hit=` followed by `1` (hit), or `0` (miss).
-If the hit results in a sink, then the response will also include `sink=` followed by a letter code (`C`, `B`, `R`, `S`, `D`) of the sunk ship.
-An example of such a reply is `hit=1\&sink=D`.
-
-If the fire message includes coordinates that are out of bounds, the response will be `HTTP Not Found`.
-If the fire message includes coordinates that have been already fired opon, the response will be `HTTP Gone`.
-Finally, if the fire message is not formatted correctly, the response will be `HTTP Bad Request`.
-For your reference here's a [link](\href{https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to the different HTTP response status codes.
-
+The client sends messages to the server, which converts them to pig latin, and transmits them back.
+The client and the server send messages to each other through the transport layer provided by an RDT implementation using the `rdt_1_0_send` and `rdt_1_0_receive` functions.
+The starting `rdt.py} provides only the RDT 1.0 version of the protocol, which does not tolerate packet corruption, or loss.
+The RDT protocol uses `udt_send` and `udt_receive` provided by `network.py` to transfer bytes between the client and server machines.
+The network layer may corrupt packets or lose packets altogether.
+`rdt.py` relies on the `Packet` class (in the same file) to form transport layer packets.
+Your job will be to extend `rdt.py` to tolerate packet corruption and loss.
+The provided code  lists prototype send and receive functions for those protocols.
+You may need to modify/extend the `Packet` class to transmit the necessary information for these functions to work correctly.
+The provided implementation of `network.py` is reliable, but we will test your code with non-zero probability for packet corruption and loss by changing the values of `prob_pkt_loss` and `prob_byte_corr` of the `NetworkLayer` class.
+You may change those variables yourself to test your code.
 
 ### Program Invocation
 
-Your server process should accept a port parameter, on which a client can connect, and the file containing the setup of your board, eg. 
+To run the starting code you may run:
 
-`python server.py 5000 own_board.txt`.
+```
+python server.py 5000
+```
 
-Your client process should accept the IP address, the port of the server process, and the X and Y coordinates onto which to fire, eg. 
+and
 
-`python client.py 128.111.52.245 5000 5 7`.
+```
+python client.py localhost 5000
+```
 
-The client will be invoked multiple times during the game. 
-
-
-### Internal State Representation
-Following each `fire` message the server should update the state of the player's `own_board.txt` (whether a player's ship has been hit and where).
-Following each `result` message the client should update the record of the player's shots onto the opponent's board, represented internally as `opponent_board.txt`.
-A player should be able able to visually inspect their own board and their record of opponent's board on `http://localhost:5000/own_board.html` and `http://localhost:5000/opponent_board.html` respectively.
-It is up to you how you visually represent the state of each board.
+in separate terminal windows. 
+Be sure to start the server first, to allow it to start listening on a socket, and start the client soon after, before the server times out.
 
 
-## BONUS
+## BONUS 1
 
-I will award __one bonus point__ for each of the following:  
+The network layer may also reorder packets.
+If you set `prob_pkt_reorder` to a non-zero probability you will start seeing packet that are reordered.
+I will award _one bonus point_ to any group that implements RDT 3.1, which delivers packets in the correct order.
 
-* The group with the most visually appealing representation of game boards.
+## BONUS 2
 
-* Any group that eliminates the need for client.py in favor of using a browser client. 
-  *Hint: Think about how to update files by replacing them*
-
-* Any group that implements the Version 1 rules of the [Battleship: Advanced Missions](https://en.wikipedia.org/wiki/Electronic_Battleship:_Advanced_Mission) variant of the game.
-
+The RDT 3.1 is a stop and wait protocol.
+I will award _one bonus point_ to any group that implements RDT 4.0 - a pipelined reliable data transmission protocol based on either Go-back-N (GBN), or Selective Repeat (SR) mechanisms.
 
 
 ## What to Submit
 
-* \[2 points\] Find a partner.
-Submit `partners.txt` with your partner's, or partners' first and last name.
-
-* \[20 points\] `server.py` and `client.py` -- your working Python implementation of your server process. 
-A YouTube video link showing the execution of your program.
-Videos must be under 5 minutes in length - videos longer than that will not be graded.
-
-* \[1 points\] (BONUS) `bonus1.png` -- a screenshot of the browser showing the visual representation of your board.
-
-* \[1 points\] (BONUS) `bonus2.js` -- your working implementation of a browser client.
-A YouTube video link showing the execution of your program.
-
-* \[1 points\] (BONUS) `client_am.py` and `server_am.py` -- implementing the Advanced Missions rules of the Battleship game.
-A YouTube video link showing the execution of your program.
-
+You will submit different versions of `rdt.py`, which implements the send and receive functions for RDT&nbsp;2.1, and RDT&nbsp;3.0.
+RDT&nbsp;2.1 tolerates corrupted packets through retransmission.
+RDT&nbsp;3.0 tolerates corrupted and lost packets through retransmission.
+The necessary functions prototypes are already included in `rdt.py`.
+For the purposes of testing you may modify `client.py` and `server.py` to use these functions instead of those of RDT&nbsp;1.0.
+You will also submit a link to a YouTube video showing an execution of your code for each version of the protocol.
+Videos longer than 5 minutes will not be graded.
 
 ## Grading Rubric
 
-I will grade your submissions of the basic Battleship program from the YouTube video as follows:
+We will grade the assignment as follows:
 
-* \[2 points\] `server.py` shows the initial representation of player's own board
-* \[2 points\] `server.py` shows the initial representation of opponent's board
-* \[3 points\] `client.py` sends a correctly formatted `fire` message (may be shown in Wireshark)
-* \[5 points\] `server.py` correctly processes the `fire` message to update `own_board.txt`. Make sure to show all possible cases.
-* \[3 points\] `server.py` sends a correctly formatted `response` message (may be shown in Wireshark)
-* \[5 points\] `client.py` correctly processes the `result` message to update `opponent_board.txt`. Make sure to show all possible cases.
+* \[2 points\] `partners.txt} with your partner's, or partners' first and last name.
+
+* \[10 points\] `rdt_2_1.py, client_2_1.py, server_2_1.py, network_2_1.py} that correctly implement RDT&nbsp;2.1 and a link to a YouTube video showing the execution of your program
+
+* \[13 points\] `rdt_3_0.py, client_3_0.py, server_3_0.py, network_3_0.py} that correctly implement RDT&nbsp;3.0 and a link to a YouTube video showing the execution of your program
+
+* \[1 points\] (BONUS 1) `rdt_3_1.py, client_3_1.py, server_3_1.py, network_3_1.py} that correctly implement RDT&nbsp;3.1 and a link to a YouTube video showing the execution of your program
+
+* \[1 points\](BONUS 2) `rdt_4_0.py, client_4_0.py, server_4_0.py, network_4_0.py} that correctly implement RDT&nbsp;4.0 and a link to a YouTube video showing the execution of your program
+
+\end{questions}
+
+
+
+## Acknowledgements
+
+This project was adapted from Kishore Ramachandran version of this assignment.
+
 
 
 
