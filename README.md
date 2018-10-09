@@ -92,7 +92,29 @@ We will grade the assignment as follows:
 
 * \[10 points\] `rdt_2_1.py`, `client_2_1.py`, `server_2_1.py`, `network_2_1.py` that correctly implement RDT&nbsp;2.1 and a link to a YouTube video showing the execution of your program.
 
+  * \[2 points\] RDT&nbsp;2.1 delivers data under no corruption in the network
+
+  * \[2 points\] RDT&nbsp;2.1 uses a modified Packet class to send ACKs
+
+  * \[2 points\] RDT&nbsp;2.1 does not deliver corrupt packets
+
+  * \[2 points\] RDT&nbsp;2.1 uses modified Packet class to send NAKs for corrupt packets
+
+  * \[2 points\] RDT&nbsp;2.1 resends data following a NAK
+
 * \[13 points\] `rdt_3_0.py`, `client_3_0.py`, `server_3_0.py`, `network_3_0.py` that correctly implement RDT&nbsp;3.0 and a link to a YouTube video showing the execution of your program.
+
+  * \[2 points\] RDT&nbsp;3.0 delivers data under no corruption or loss in the network and uses a modified Packet class to send ACKs
+  
+  * \[2 points\] RDT&nbsp;3.0 does not deliver corrupt packets and uses modified Packet class to send NAKs
+  
+  * \[2 points\] RDT&nbsp;3.0 resends data following a NAK
+  
+  * \[2 points\] RDT&nbsp;3.0 retransmits a lost packet after a timeout
+  
+  * \[2 points\] RDT&nbsp;3.0 retransmits a packet after a lost ACK
+  
+  * \[3 points\] RDT&nbsp;3.0 ignores a duplicate packet after a premature timeout (or after a lost ACK)
 
 * \[1 points\] (BONUS) `rdt_3_1.py`, `client_3_1.py`, `server_3_1.py`, `network_3_1.py` that correctly implement RDT&nbsp;3.1 and a link to a YouTube video showing the execution of your program.
 
