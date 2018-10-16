@@ -34,7 +34,14 @@ DATA LINK LAYER (link.py)
 The code also includes `simulation.py` that manages the threads running the different network objects.
 Currently, `simulation.py` defines the following network.
 
-![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
+![network_1](https://github.com/msu-netlab/MSU_CSCI_466_PAs/blob/data_plane/images/simple.png)
+
+At a high level a network defined in `simulation.py` includes hosts, routers and links.
+`Hosts` generate and receive traffic.
+`Routers` forward traffic from one `Interface` to another based on routing tables that you will implement.
+`Links` connect network interfaces of routers and hosts.
+Finally, the `LinkLayer` forwards traffic along links.
+Please consult the [video lecture](https://youtu.be/-JXvrxjPo7o) for a more in-depth explanation of the code.
 
 ### Program Invocation
 
