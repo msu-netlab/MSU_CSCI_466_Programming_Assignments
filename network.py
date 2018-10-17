@@ -1,7 +1,7 @@
 '''
 Created on Oct 12, 2016
 
-@author: mwitt_000
+@author: mwittie
 '''
 import queue
 import threading
@@ -26,6 +26,7 @@ class Interface:
     # @param block - if True, block until room in queue, if False may throw queue.Full exception
     def put(self, pkt, block=False):
         self.queue.put(pkt, block)
+        
         
 ## Implements a network layer packet (different from the RDT packet 
 # from programming assignment 2).
@@ -82,13 +83,13 @@ class Host:
     def udt_send(self, dst_addr, data_S):
         p = NetworkPacket(dst_addr, data_S)
         self.out_intf_L[0].put(p.to_byte_S()) #send packets always enqueued successfully
-        print('%s: sending packet "%s" out interface with mtu=%d' % (self, p, self.out_intf_L[0].mtu))
+        print('%s: sending packet "%s" on the out interface with mtu=%d' % (self, p, self.out_intf_L[0].mtu))
         
     ## receive packet from the network layer
     def udt_receive(self):
         pkt_S = self.in_intf_L[0].get()
         if pkt_S is not None:
-            print('%s: received packet "%s"' % (self, pkt_S))
+            print('%s: received packet "%s" on the in interface' % (self, pkt_S))
        
     ## thread target for the host to keep receiving data
     def run(self):
