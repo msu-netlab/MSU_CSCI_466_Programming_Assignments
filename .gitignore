@@ -9,3 +9,5 @@ __pycache*
 bin/
 
 lib/python3\.6/
+
+\.pydevproject
