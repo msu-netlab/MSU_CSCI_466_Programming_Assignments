@@ -90,8 +90,8 @@ Your task is to extend the given code to implement several data link router func
   The format of these is up to you.
   You will also need to modify the `Router` class to forward the packets correctly between interfaces according to your routing tables.
 
-Finally, third, extend `NetworkPacket` with a source address and a destination address.
-Configure the routing tables to forward packets from Host 1 through Router B and from Host 2 through Router C.
+Finally, third, configure the routing tables to forward packets from Host 1 through Router B and from Host 2 through Router C.
+You may extend `NetworkPacket` with a source address, but it is not necessary to forward a packet onto different paths.
 
   Implement your solution in files `link_3.py`, `network_3.py`, and `simulation_3.py`.
 
