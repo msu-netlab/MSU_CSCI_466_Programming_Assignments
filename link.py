@@ -1,7 +1,7 @@
 '''
 Created on Oct 12, 2016
 
-@author: mwitt_000
+@author: mwittie
 '''
 
 import queue

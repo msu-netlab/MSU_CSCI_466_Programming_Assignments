@@ -1,1 +1,13 @@
 __pycache*
+
+*.sublime-project
+
+*.sublime-workspace
+
+\.python-version
+
+bin/
+
+lib/python3\.6/
+
+\.pydevproject

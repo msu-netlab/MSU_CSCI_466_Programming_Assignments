@@ -1,7 +1,7 @@
 '''
 Created on Oct 12, 2016
 
-@author: mwitt_000
+@author: mwittie
 '''
 import network
 import link
@@ -28,6 +28,7 @@ if __name__ == '__main__':
     object_L.append(link_layer)
     
     #add all the links
+    #link parameters: from_node, from_intf_num, to_node, to_intf_num, mtu
     link_layer.add_link(link.Link(client, 0, router_a, 0, 50))
     link_layer.add_link(link.Link(router_a, 0, server, 0, 50))
     
