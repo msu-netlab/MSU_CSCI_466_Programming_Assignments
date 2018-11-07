@@ -6,3 +6,5 @@ __pycache*
 bin/python3.6
 lib/python*
 \.pydevproject
+
+\.project

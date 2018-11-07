@@ -144,6 +144,12 @@ class Router:
         self.rt_tbl_D = {}      # {destination: {router: cost}}
         print('%s: Initialized routing table' % self)
         self.print_routes()
+    
+        
+    ## Print routing table
+    def print_routes(self):
+        #TODO: print the routes as a two dimensional table
+        print(self.rt_tbl_D)
 
 
     ## called when printing the object
@@ -205,12 +211,6 @@ class Router:
         #TODO: add logic to update the routing tables and
         # possibly send out routing updates
         print('%s: Received routing update %s from interface %d' % (self, p, i))
-
-        
-    ## Print routing table
-    def print_routes(self):
-        #TODO: print the routes as a two dimensional table
-        print(self.rt_tbl_D)
 
                 
     ## thread target for the host to keep forwarding data
