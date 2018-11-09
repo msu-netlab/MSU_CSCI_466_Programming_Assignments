@@ -1,7 +1,6 @@
 # CSCI 466 Programming Assignment - MPLS 
 
 ## Instructions
-### Due: 12/12/17 11:59PM
 
 
 Complete the following assignment in pairs, or groups of three. 
