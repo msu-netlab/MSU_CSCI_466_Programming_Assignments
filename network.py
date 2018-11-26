@@ -1,6 +1,6 @@
 import queue
 import threading
-
+import sys
 
 ## wrapper class for a queue of packets
 class Interface:
@@ -142,15 +142,41 @@ class Router:
         self.cost_D = cost_D    # {neighbor: {interface: cost}}
         #TODO: set up the routing table for connected hosts
         self.rt_tbl_D = {}      # {destination: {router: cost}}
-        print('%s: Initialized routing table' % self)
-        self.print_routes()
-    
+        self.print_routes();
+        print('%s: Initialized routing table' % self)    
         
     ## Print routing table
     def print_routes(self):
-        #TODO: print the routes as a two dimensional table
-        print(self.rt_tbl_D)
-
+        keys = self.cost_D.keys();
+        values = self.cost_D.values();
+        columns = len(keys)+1;
+        keyString = "";
+        topTableString = "╒"
+        headerBottomTableString = "╞"
+        tableRowSeperator = "├"
+        tableBottom = "╘"
+        #//Setting up table
+        for i in range(columns):
+            if(i +1 != columns):
+                topTableString+="══════╤"
+                headerBottomTableString += "══════╪"
+                tableRowSeperator += "──────┼"
+                tableBottom += "══════╧"
+            else:
+                topTableString+="══════╕\n"
+                headerBottomTableString+= "══════╡\n"
+                tableRowSeperator += "──────┤\n"
+                tableBottom += "══════╛\n"
+        for item in keys:
+            keyString += "  " + item + "  │";
+        costRow = "";
+        for item in values:
+            costRow+= "     " + str(list(item.values())[0]) + "│"
+        costRow+="\n"
+        router = "│  " + self.name + "  │"
+        sys.stdout.write(topTableString + "│  " +self.name + "  │" + keyString + "\n" + headerBottomTableString);
+        sys.stdout.write(router + costRow)
+        sys.stdout.write(tableBottom);
 
     ## called when printing the object
     def __str__(self):
