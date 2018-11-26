@@ -141,7 +141,10 @@ class Router:
         #save neighbors and interfeces on which we connect to them
         self.cost_D = cost_D    # {neighbor: {interface: cost}}
         #TODO: set up the routing table for connected hosts
-        self.rt_tbl_D = {}      # {destination: {router: cost}}
+        self.rt_tbl_D = {"H1": {"RA": -1, "RB": -1},
+            "H2": {"RA": -1, "RB": -1},
+            "RA": {"RA": 0, "RB": -1},
+            "RB": {"RA": -1, "RB": 0}}     # {destination: {router: cost}}
         self.print_routes();
         print('%s: Initialized routing table' % self)    
     def getCurrentRoutingTable(self):
@@ -153,9 +156,9 @@ class Router:
         for i in range(len(keys)):
             if first:
                 first = False;
-                routingTableString+= keys[i] + "," + str(list(values[i])[0]) + "," + str(list(values[i].values())[0])+ ","
+                routingTableString+= keys[i] + "," + str(list(values[i])[0]) + "," + str(list(values[i].values())[0])
             else:
-                routingTableString+= ":" + keys[i] + "," + str(list(values[i])[0]) + "," + str(list(values[i].values())[0]) + ","
+                routingTableString+= ":" + keys[i] + "," + str(list(values[i])[0]) + "," + str(list(values[i].values())[0])
         print(routingTableString);
         return routingTableString;
     ## Print routing table
@@ -249,6 +252,16 @@ class Router:
     def update_routes(self, p, i):
         #TODO: add logic to update the routing tables and
         # possibly send out routing updates
+        updates = p.to_byte_S()[6:].split(':')
+        for j in updates:
+            items = j.split(",");
+            first = True;
+            if items[0] in self.cost_D:
+                print("FOUND IN TABLE")
+                del self.cost_D[items[0]];
+                self.cost_D[items[0]] = {items[1]:items[2]};
+            else:
+                self.cost_D[items[0]] = {items[1]:items[2]};
         print('%s: Received routing update %s from interface %d' % (self, p, i))
 
                 
