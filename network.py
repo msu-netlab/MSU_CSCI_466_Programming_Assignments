@@ -144,7 +144,20 @@ class Router:
         self.rt_tbl_D = {}      # {destination: {router: cost}}
         self.print_routes();
         print('%s: Initialized routing table' % self)    
-        
+    def getCurrentRoutingTable(self):
+        routingTableString = ""
+        values = list(self.cost_D.values());
+        valueValues = self.cost_D
+        keys = list(self.cost_D.keys());
+        first = True;
+        for i in range(len(keys)):
+            if first:
+                first = False;
+                routingTableString+= keys[i] + "," + str(list(values[i])[0]) + "," + str(list(values[i].values())[0])+ ","
+            else:
+                routingTableString+= ":" + keys[i] + "," + str(list(values[i])[0]) + "," + str(list(values[i].values())[0]) + ","
+        print(routingTableString);
+        return routingTableString;
     ## Print routing table
     def print_routes(self):
         keys = self.cost_D.keys();
@@ -222,7 +235,7 @@ class Router:
     def send_routes(self, i):
         # TODO: Send out a routing table update
         #create a routing table update packet
-        p = NetworkPacket(0, 'control', 'DUMMY_ROUTING_TABLE')
+        p = NetworkPacket(0, 'control', self.getCurrentRoutingTable())
         try:
             print('%s: sending routing update "%s" from interface %d' % (self, p, i))
             self.intf_L[i].put(p.to_byte_S(), 'out', True)
