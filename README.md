@@ -53,7 +53,7 @@ To run the starting code you may execute:
 python simulation.py
 ```
 
-The current `simulation_time` in `simulation.py` is __10 second__ to account for the delay of packet forwarding. 
+The current `simulation_time` in `simulation.py` is __10 seconds__ to account for the delay of packet forwarding. 
 As the network becomes more complex and takes longer to execute, you may need to extend the simulation to allow all the packets to be transfered.
 
 
@@ -80,7 +80,7 @@ As the network becomes more complex and takes longer to execute, you may need to
 
 	b. [4 points] Implement MPLS forwarding based on MPLS forwarding tables passed to the `Router` constructor as `frwd_tbl_D`.
 	The structure of `frwd_tbl_D` is up to you, but the tables should contain the in label, in interface, out label, and out interface.
-	For each router, pass in correctly designed forwarding tables so that your routers achieve end-to-end connectivity and forward traffic from different hosts on different paths.
+	For each router, pass in correctly designed forwarding tables so that your routers achieve end-to-end connectivity.
 	You will need to modify `Router.process_queues()` and `Router.process_MPLS_frame()` to implement MPLS forwarding.
 
 	c. [2 points] Implement MPLS decapsulation at last hop router to deliver `NetworkPacket` to end hosts.
@@ -112,13 +112,13 @@ Add transmissions from `Host 1` and `Host 2` to `Host 3` and configure MPLS tabl
 
 3. [10 points] Implement strict priority forwarding on the MPLS routers. 
 
-	a. [2 points] Recall that the IP header has a type of service~(TOS) field that carries packet priority.
+	a. [2 points] Recall that the IP header has a type of service (TOS) field that carries packet priority.
 	`NetworkPacket` constructor in this assignment has a `priority` argument, though it is currently unused.
 	The `udt_send()` function in simulation.py sends packet with priorities 0 and 1. 
 	Assume higher number priorities are higher priorities, i.e. 1 is higher than 0. 
 	Extend `NetworkPacket` to carry the priority number with which it was sent.
 
-	b. [3 points] Recall that forwarding at this layer accounts for link capacities.
+	b. [3 points] Recall that forwarding at this assignment (at the link layer) accounts for link capacities.
 	You will notice a bottleneck at `Router B` in problem 1, where queued packets take a while to offload.
 	Implement a similar bottleneck at `Router D` in the network from problem 2.
 	Change the program output to show how many packets of each priority remain queued at each router.
