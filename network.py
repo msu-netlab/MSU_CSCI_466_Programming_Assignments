@@ -1,6 +1,10 @@
 import queue
 import threading
+<<<<<<< HEAD
 from collections import defaultdict
+=======
+import sys
+>>>>>>> d58d89bd3ea0d57f61ad9304afb05b8d1eec2c7b
 
 ## wrapper class for a queue of packets
 class Interface:
@@ -141,6 +145,7 @@ class Router:
         #save neighbors and interfeces on which we connect to them
         self.cost_D = cost_D    # {neighbor: {interface: cost}}
         #TODO: set up the routing table for connected hosts
+<<<<<<< HEAD
         # {destination: {router: cost}}
         self.rt_tbl_D = {}    # {destination: {router: cost}}
         i = 0 #interface count
@@ -197,6 +202,89 @@ class Router:
         #return
         print(self.rt_tbl_D)
 
+=======
+        # {destination: {router: cost}} ##Initial setup
+        self.rt_tbl_D = {name:{name:0}}    
+        keys = list(cost_D.keys());
+        values = list(cost_D.values());
+        for i in range(len(keys)):
+            self.rt_tbl_D[keys[i]] = {name:list(values[i].values())[0]}
+        self.print_routes();
+        print('%s: Initialized routing table' % self)    
+    def getCurrentRoutingTable(self):
+        routingTableString = self.name + "-"
+        values = list(self.rt_tbl_D.values());
+        keys = list(self.rt_tbl_D.keys());
+        first = True;
+        for i in range(len(keys)):
+            if first:
+                first = False;
+                routingTableString+= keys[i] + "," + str(list(values[i])[0]) + "," + str(list(values[i].values())[0])
+            else:
+                routingTableString+= ":" + keys[i] + "," + str(list(values[i])[0]) + "," + str(list(values[i].values())[0])
+        print(routingTableString);
+        return routingTableString;
+    ## Print routing table
+    def print_routes(self):
+        keys = self.rt_tbl_D.keys();
+        values = self.rt_tbl_D.values();
+        columns = len(keys)+1;
+        keyString = "";
+        topTableString = "╒"
+        headerBottomTableString = "╞"
+        tableRowSeperator = "├"
+        tableBottom = "╘"
+        #//Setting up table
+        for i in range(columns):
+            if(i +1 != columns):
+                topTableString+="══════╤"
+                headerBottomTableString += "══════╪"
+                tableRowSeperator += "──────┼"
+                tableBottom += "══════╧"
+            else:
+                topTableString+="══════╕\n"
+                headerBottomTableString+= "══════╡\n"
+                tableRowSeperator += "──────┤\n"
+                tableBottom += "══════╛\n"
+        itemSpace = "      ";
+        routers = {};
+        for item in keys:
+            keyString += "  " + item + "  │";
+        for i in range(len(values)):
+            if list(list(values)[i].keys())[0] not in routers:
+                routers[list(list(values)[i].keys())[0]] = "";
+        costRows = [];
+        uniqueRouters = [];
+        changed = [];
+        for item in routers:
+            costRows.append("│  " + item + "  │");
+            uniqueRouters.append(item);
+        for i in range(len(values)):
+            changedFlag = False;
+            for j in range(len(costRows)):
+                for k in range(len(list(values)[i].keys())):
+                    if list(list(values)[i].keys())[k] == uniqueRouters[j]:
+                        formattedVal = itemSpace[0:len(itemSpace)-len(str(list(list(values)[i].values())[k]))] + str(list(list(values)[i].values())[k])     
+                        costRows[j]+= formattedVal + "│"
+                        changed.append(j);
+                        changedFlag=True;
+            if changedFlag:
+                changedFlag = False;
+                for l in range(len(costRows)):
+                    if(l in changed):
+                        continue;
+                    else:
+                        costRows[l] += "      │"
+                changed = [];
+                
+        sys.stdout.write(topTableString + "│  " +self.name + "  │" + keyString + "\n" + headerBottomTableString);
+        for i in range(len(costRows)):
+            if i+1 != len(costRows):
+                sys.stdout.write(costRows[i] + "\n" + tableRowSeperator);
+            else:
+                sys.stdout.write(costRows[i] + "\n");
+        sys.stdout.write(tableBottom);
+>>>>>>> d58d89bd3ea0d57f61ad9304afb05b8d1eec2c7b
 
     ## called when printing the object
     def __str__(self):
@@ -242,7 +330,7 @@ class Router:
     def send_routes(self, i):
         # TODO: Send out a routing table update
         #create a routing table update packet
-        p = NetworkPacket(0, 'control', 'DUMMY_ROUTING_TABLE')
+        p = NetworkPacket(0, 'control', self.getCurrentRoutingTable())
         try:
             print('%s: sending routing update "%s" from interface %d' % (self, p, i))
             self.intf_L[i].put(p.to_byte_S(), 'out', True)
@@ -256,7 +344,37 @@ class Router:
     def update_routes(self, p, i):
         #TODO: add logic to update the routing tables and
         # possibly send out routing updates
+        updates = p.to_byte_S()[6:].split('-')
+        name = updates[0];
+        update = updates[1].split(":");
+        for j in update:
+            items = j.split(",");
+            first = True;
+            if items[0] in self.rt_tbl_D:
+                print("FOUND IN TABLE")
+                values = list(self.rt_tbl_D.values())
+                exists = False;
+                #already in table
+                for i in range(len(values)):
+                    vks = list(values[i].keys());
+                    for vk in vks:
+                        if vk == items[1]:
+                            self.rt_tbl_D[items[0]][items[1]] = items[2];
+                            #do stuff/compare
+                            print(items[0])
+                            print(self.rt_tbl_D[items[0]]);
+                            print("Do something");
+                            exists = True;
+                if not exists:
+                    print(items[0])
+                    print(self.rt_tbl_D[items[0]]);
+                    self.rt_tbl_D[items[0]][items[1]] = items[2];
+            else:
+                print(items[0])
+                self.rt_tbl_D[items[0]] = {items[1]:items[2]};
+                print(self.rt_tbl_D);
         print('%s: Received routing update %s from interface %d' % (self, p, i))
+        print(self.rt_tbl_D);
 
                 
     ## thread target for the host to keep forwarding data
