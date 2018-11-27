@@ -275,7 +275,6 @@ class Router:
             print('%s: packet "%s" lost on interface %d' % (self, p, i))
             pass
 
-
     ## forward the packet according to the routing table
     #  @param p Packet containing routing information
     def update_routes(self, p, i):
@@ -284,6 +283,7 @@ class Router:
         updates = p.to_byte_S()[6:].split('-')
         name = updates[0];
         update = updates[1].split(":");
+        #Raw updating
         for j in update:
             items = j.split(",");
             first = True;
@@ -298,22 +298,14 @@ class Router:
                         if vk == items[1]:
                             self.rt_tbl_D[items[0]][items[1]] = items[2];
                             #do stuff/compare
-                            print(items[0])
-                            print(self.rt_tbl_D[items[0]]);
                             print("Do something");
                             exists = True;
                 if not exists:
-                    print(items[0])
-                    print(self.rt_tbl_D[items[0]]);
                     self.rt_tbl_D[items[0]][items[1]] = items[2];
             else:
-                print(items[0])
                 self.rt_tbl_D[items[0]] = {items[1]:items[2]};
-                print(self.rt_tbl_D);
-        print('%s: Received routing update %s from interface %d' % (self, p, i))
-        print(self.rt_tbl_D);
+       
 
-                
     ## thread target for the host to keep forwarding data
     def run(self):
         print (threading.currentThread().getName() + ': Starting')
