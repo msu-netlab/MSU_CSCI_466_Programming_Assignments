@@ -254,8 +254,8 @@ class Router:
         try:
             # TODO: Here you will need to implement a lookup into the 
             # forwarding table to find the appropriate outgoing interface
-            # for now we assume the outgoing interface is 1
-            self.intf_L[1].put(p.to_byte_S(), 'out', True)
+            # for now we assume the outgoing interface is 1                
+            self.intf_L[i].put(p.to_byte_S(), 'out', True)
             print('%s: forwarding packet "%s" from interface %d to %d' % \
                 (self, p, i, 1))
         except queue.Full:
