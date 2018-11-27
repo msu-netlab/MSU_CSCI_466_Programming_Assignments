@@ -198,18 +198,23 @@ class Router:
             costRows.append("│  " + item + "  │");
             uniqueRouters.append(item);
         for i in range(len(values)):
+            changedFlag = False;
             for j in range(len(costRows)):
                 for k in range(len(list(values)[i].keys())):
                     if list(list(values)[i].keys())[k] == uniqueRouters[j]:
                         formattedVal = itemSpace[0:len(itemSpace)-len(str(list(list(values)[i].values())[k]))] + str(list(list(values)[i].values())[k])     
                         costRows[j]+= formattedVal + "│"
                         changed.append(j);
+                        changedFlag=True;
+            if changedFlag:
+                changedFlag = False;
                 for l in range(len(costRows)):
-                    if l in changed:
-                        continue
+                    if(l in changed):
+                        continue;
                     else:
                         costRows[l] += "      │"
-        changed = [];
+                changed = [];
+                
         sys.stdout.write(topTableString + "│  " +self.name + "  │" + keyString + "\n" + headerBottomTableString);
         for i in range(len(costRows)):
             if i+1 != len(costRows):
