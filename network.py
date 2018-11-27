@@ -193,14 +193,23 @@ class Router:
                 routers[list(list(values)[i].keys())[0]] = "";
         costRows = [];
         uniqueRouters = [];
+        changed = [];
         for item in routers:
             costRows.append("│  " + item + "  │");
             uniqueRouters.append(item);
         for i in range(len(values)):
             for j in range(len(costRows)):
-                if list(list(values)[i].keys())[0] == uniqueRouters[j]:
-                    formattedVal = itemSpace[0:len(itemSpace)-len(str(list(list(values)[i].values())[0]))] + str(list(list(values)[i].values())[0])     
-                    costRows[j]+= formattedVal + "│"
+                for k in range(len(list(values)[i].keys())):
+                    if list(list(values)[i].keys())[k] == uniqueRouters[j]:
+                        formattedVal = itemSpace[0:len(itemSpace)-len(str(list(list(values)[i].values())[k]))] + str(list(list(values)[i].values())[k])     
+                        costRows[j]+= formattedVal + "│"
+                        changed.append(j);
+                for l in range(len(costRows)):
+                    if l in changed:
+                        continue
+                    else:
+                        costRows[l] += "      │"
+        changed = [];
         sys.stdout.write(topTableString + "│  " +self.name + "  │" + keyString + "\n" + headerBottomTableString);
         for i in range(len(costRows)):
             if i+1 != len(costRows):
@@ -279,15 +288,25 @@ class Router:
                 exists = False;
                 #already in table
                 for i in range(len(values)):
-                    if(list(values[i].keys())[0] == items[1]):
-                        #do stuff/compare
-                        print("Do something");
-                        exists = True;
+                    vks = list(values[i].keys());
+                    for vk in vks:
+                        if vk == items[1]:
+                            self.rt_tbl_D[items[0]][items[1]] = items[2];
+                            #do stuff/compare
+                            print(items[0])
+                            print(self.rt_tbl_D[items[0]]);
+                            print("Do something");
+                            exists = True;
                 if not exists:
-                    self.rt_tbl_D[items[0]][name] = items[2];
+                    print(items[0])
+                    print(self.rt_tbl_D[items[0]]);
+                    self.rt_tbl_D[items[0]][items[1]] = items[2];
             else:
-                self.rt_tbl_D[items[0]] = {name:items[2]};
+                print(items[0])
+                self.rt_tbl_D[items[0]] = {items[1]:items[2]};
+                print(self.rt_tbl_D);
         print('%s: Received routing update %s from interface %d' % (self, p, i))
+        print(self.rt_tbl_D);
 
                 
     ## thread target for the host to keep forwarding data
