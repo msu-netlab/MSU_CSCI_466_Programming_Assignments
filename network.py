@@ -141,17 +141,18 @@ class Router:
         #save neighbors and interfeces on which we connect to them
         self.cost_D = cost_D    # {neighbor: {interface: cost}}
         #TODO: set up the routing table for connected hosts
-        self.rt_tbl_D = {"H1": {"RA": -1, "RB": -1},
-            "H2": {"RA": -1, "RB": -1},
-            "RA": {"RA": 0, "RB": -1},
-            "RB": {"RA": -1, "RB": 0}}     # {destination: {router: cost}}
+        # {destination: {router: cost}} ##Initial setup
+        self.rt_tbl_D = {name:{name:0}}    
+        keys = list(cost_D.keys());
+        values = list(cost_D.values());
+        for i in range(len(keys)):
+            self.rt_tbl_D[keys[i]] = {name:list(values[i].values())[0]}
         self.print_routes();
         print('%s: Initialized routing table' % self)    
     def getCurrentRoutingTable(self):
-        routingTableString = ""
-        values = list(self.cost_D.values());
-        valueValues = self.cost_D
-        keys = list(self.cost_D.keys());
+        routingTableString = self.name + "-"
+        values = list(self.rt_tbl_D.values());
+        keys = list(self.rt_tbl_D.keys());
         first = True;
         for i in range(len(keys)):
             if first:
@@ -163,8 +164,8 @@ class Router:
         return routingTableString;
     ## Print routing table
     def print_routes(self):
-        keys = self.cost_D.keys();
-        values = self.cost_D.values();
+        keys = self.rt_tbl_D.keys();
+        values = self.rt_tbl_D.values();
         columns = len(keys)+1;
         keyString = "";
         topTableString = "╒"
@@ -183,15 +184,29 @@ class Router:
                 headerBottomTableString+= "══════╡\n"
                 tableRowSeperator += "──────┤\n"
                 tableBottom += "══════╛\n"
+        itemSpace = "      ";
+        routers = {};
         for item in keys:
             keyString += "  " + item + "  │";
-        costRow = "";
-        for item in values:
-            costRow+= "     " + str(list(item.values())[0]) + "│"
-        costRow+="\n"
-        router = "│  " + self.name + "  │"
+        for i in range(len(values)):
+            if list(list(values)[i].keys())[0] not in routers:
+                routers[list(list(values)[i].keys())[0]] = "";
+        costRows = [];
+        uniqueRouters = [];
+        for item in routers:
+            costRows.append("│  " + item + "  │");
+            uniqueRouters.append(item);
+        for i in range(len(values)):
+            for j in range(len(costRows)):
+                if list(list(values)[i].keys())[0] == uniqueRouters[j]:
+                    formattedVal = itemSpace[0:len(itemSpace)-len(str(list(list(values)[i].values())[0]))] + str(list(list(values)[i].values())[0])     
+                    costRows[j]+= formattedVal + "│"
         sys.stdout.write(topTableString + "│  " +self.name + "  │" + keyString + "\n" + headerBottomTableString);
-        sys.stdout.write(router + costRow)
+        for i in range(len(costRows)):
+            if i+1 != len(costRows):
+                sys.stdout.write(costRows[i] + "\n" + tableRowSeperator);
+            else:
+                sys.stdout.write(costRows[i] + "\n");
         sys.stdout.write(tableBottom);
 
     ## called when printing the object
@@ -252,16 +267,26 @@ class Router:
     def update_routes(self, p, i):
         #TODO: add logic to update the routing tables and
         # possibly send out routing updates
-        updates = p.to_byte_S()[6:].split(':')
-        for j in updates:
+        updates = p.to_byte_S()[6:].split('-')
+        name = updates[0];
+        update = updates[1].split(":");
+        for j in update:
             items = j.split(",");
             first = True;
-            if items[0] in self.cost_D:
+            if items[0] in self.rt_tbl_D:
                 print("FOUND IN TABLE")
-                del self.cost_D[items[0]];
-                self.cost_D[items[0]] = {items[1]:items[2]};
+                values = list(self.rt_tbl_D.values())
+                exists = False;
+                #already in table
+                for i in range(len(values)):
+                    if(list(values[i].keys())[0] == items[1]):
+                        #do stuff/compare
+                        print("Do something");
+                        exists = True;
+                if not exists:
+                    self.rt_tbl_D[items[0]][name] = items[2];
             else:
-                self.cost_D[items[0]] = {items[1]:items[2]};
+                self.rt_tbl_D[items[0]] = {name:items[2]};
         print('%s: Received routing update %s from interface %d' % (self, p, i))
 
                 
