@@ -1,14 +1,7 @@
 import queue
 import threading
-<<<<<<< HEAD
-from collections import defaultdict
-=======
 import sys
-<<<<<<< HEAD
->>>>>>> d58d89bd3ea0d57f61ad9304afb05b8d1eec2c7b
-=======
 import math
->>>>>>> 930407b4618e8be0e308a9111b85f0d2a05ca97d
 
 ## wrapper class for a queue of packets
 class Interface:
@@ -149,64 +142,6 @@ class Router:
         #save neighbors and interfeces on which we connect to them
         self.cost_D = cost_D    # {neighbor: {interface: cost}}
         #TODO: set up the routing table for connected hosts
-<<<<<<< HEAD
-        # {destination: {router: cost}}
-        self.rt_tbl_D = {}    # {destination: {router: cost}}
-        i = 0 #interface count
-        for neigh, link in self.cost_D.items(): #iterate through each known neighbor
-            for x in range(4): #because python is garbage and relies on dicts and we don't know what interface will be used in what order, we will scan all possible ones. 
-                if x in link:
-                    self.rt_tbl_D[neigh] = {self.name: link[x]} #nested dict
-            
-            
-        #self.rt_tbl_D = {}      # {destination: {router: cost}}
-        print('%s: Initialized routing table' % self)
-        self.print_routes()
-    
-        
-    ## Print routing table
-    def print_routes(self):
-        
-        #TODO: print the routes as a two dimensional table
-        
-        print_table = ""
-        
-        #top border
-        print_table = '======'
-        for i in self.rt_tbl_D:
-            #iterate through each known destination
-             print_table += '======'
-        print_table += '\n'     #new line
-        
-        #table headers
-        print_table += '| {0}   |'.format(self.name) #which router it's printing from
-        for i in self.rt_tbl_D:
-            #iterate through each known neighbor
-            print_table += '  {0} |'.format(i) #destination headers
-        
-        print_table += '\n'     #new line
-        
-        #header border
-        print_table = '======'
-        for i in self.rt_tbl_D:
-            #iterate through each known destination
-             print_table += '======'
-        print_table += '\n'     #new line
-        
-        #now, all the rows
-        for i in self.rt_tbl_D:
-            known_routers = {}
-            if list(self.rt_tbl_D[i].keys())[0] in known_routers:
-                #add to that router
-            else: 
-                #add the router
-                known_routers[list(self.rt_tbl_D[i].keys())[0]]
-        
-        
-        #return
-        print(self.rt_tbl_D)
-
-=======
         # {destination: {router: cost}} ##Initial setup
         self.rt_tbl_D = {name:{name:0}}    
         keys = list(cost_D.keys());
@@ -288,7 +223,6 @@ class Router:
             else:
                 sys.stdout.write(costRows[i] + "\n");
         sys.stdout.write(tableBottom);
->>>>>>> d58d89bd3ea0d57f61ad9304afb05b8d1eec2c7b
 
     ## called when printing the object
     def __str__(self):
