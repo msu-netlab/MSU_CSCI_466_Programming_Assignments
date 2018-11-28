@@ -141,7 +141,7 @@ class Router:
         #create a list of interfaces
         self.intf_L = [Interface(max_queue_size) for _ in range(len(cost_D))]
         #save neighbors and interfeces on which we connect to them
-        self.cost_D = cost_D    # {neighbor: {interface: cost}}
+        self.cost_D = cost_D    #cost_D {neighbor: {interface: cost}}
         #TODO: set up the routing table for connected hosts
         # {destination: {router: cost}} ##Initial setup
         self.rt_tbl_D = {name:{name:0}}    
@@ -257,7 +257,37 @@ class Router:
             # TODO: Here you will need to implement a lookup into the 
             # forwarding table to find the appropriate outgoing interface
             # for now we assume the outgoing interface is 1
-            self.intf_L[1].put(p.to_byte_S(), 'out', True)
+            
+            #we know the length of the shortest path 
+            #we know how many edges and verticies there are
+            #we don't know what the shortest path is... like how is the program going to trace the path??
+            #simple: we use the bellman ford equation as a verification instead of an algorithm 
+            
+            #first, let's make it easy. 
+            dest = p.dst
+            
+            #then we'll set aside some variable for the node to forward to, let's call it v
+            v_d = 999 #distance to v 
+            v = dest
+            
+            #cost_D {neighbor: {interface: cost}}
+            #okay, so now we know where we're going.
+            for header in self.rt_tbl_D:
+                #for every node in the routing table,             
+                if header in self.cost_D: #narrow it down to only neighbors
+                    #header is in routing table and is reachable by the node
+                    dest_d = int(self.rt_tbl_D[dest][self.name]) #distance to the destination
+                    node_d = int(self.rt_tbl_D[header][self.name]) #distance to potential outgoing node
+                    node_dest_d = int(self.rt_tbl_D[header][dest]) #distance from the potential outgoing node to the destination
+                    
+                    if v_d > (node_d + node_dest_d): #find the minimum
+                        #new minimum
+                        v_d = node_d
+                        v = header
+                        
+            out_intf = self.cost_D[v][0] #set the outgoing interface to the result.
+            
+            self.intf_L[out_intf].put(p.to_byte_S(), 'out', True)
             print('%s: forwarding packet "%s" from interface %d to %d' % \
                 (self, p, i, 1))
         except queue.Full:
