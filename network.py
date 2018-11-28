@@ -305,31 +305,37 @@ class Router:
             else:
                 self.rt_tbl_D[items[0]] = {items[1]:items[2]}
         
-        
-        
-        #calculate the gaps, bell ford
-        
-        #step 1: set all unknowns to infinity
-        for header in self.rt_tbl_D:
-            #see if header is missing routers in its dict
-            #for each router,
-            for router in self.uniqueRouters:
+    
+
+        '''for header in self.rt_tbl_D: #see if header is missing routers in its dict
+            for router in self.uniqueRouters: #for each router,
                 if router not in self.rt_tbl_D[header]: #if the router is NOT in the dict of the header
                     #put it in the header's dict, set cost to inf
                     self.rt_tbl_D[header][router] = 999 #basically infinity, right?
-                    self.rt_tbl_D[router][header] = 999
+                    self.rt_tbl_D[router][header] = 999'''
         
     
-        #step 2: relax edges
-        
+
+        self.print_routes() #beacuse uniqueRouters ONLY updates in the print method, we need to run it one more time before we start the algorithm.
         #run the algorithm on each router in the table
-        for router in self.uniqueRouters: #for every router (row) in the network,
+        router_count = len(self.uniqueRouters)
+        print(router_count)
+        for j in range(router_count): #for every router (row) in the network,
+            #step 1: set all unknowns to infinity
+            for header in self.rt_tbl_D:
+                print("Detecting gaps for {} to {}".format(header,self.uniqueRouters[j]))
+                if self.uniqueRouters[j] not in self.rt_tbl_D[header]: #if the router is NOT in the dict of the header
+                    print("Gap filled {} to {}".format(header, self.uniqueRouters[j]))
+                    #put it in the header's dict, set cost to inf
+                    self.rt_tbl_D[header][self.uniqueRouters[j]] = 999 #basically infinity, right?
+                    self.rt_tbl_D[self.uniqueRouters[j]][header] = 999
             # {header: {router: cost}}
             #bellman ford starts here
             i=1
             #http://courses.csail.mit.edu/6.006/spring11/lectures/lec15.pdf
             #rt_tbl is a list of edges.
             
+            #step 2: relax edges |V|-1 times
             for i in range(len(self.rt_tbl_D)):
                 # for V-1 (the number of verticies minus one
                 for u in self.rt_tbl_D:
@@ -337,12 +343,12 @@ class Router:
                     #for each vertex's neighbor,
                     for v in self.rt_tbl_D[u]: #iterate through each outgoing edge
                         edge_distance = int(self.rt_tbl_D[u][v])
-                        u_dist = int(self.rt_tbl_D[u][router]) #distance to u vertex
-                        v_dist = int(self.rt_tbl_D[v][router]) #distance to v vertex
+                        u_dist = int(self.rt_tbl_D[u][self.uniqueRouters[j]]) #distance to u vertex
+                        v_dist = int(self.rt_tbl_D[v][self.uniqueRouters[j]]) #distance to v vertex
                         try:                        
                             if (u_dist > (v_dist + edge_distance)): 
                                 #if the edge plus the distance to vertex v is greater than the distance to u 
-                                self.rt_tbl_D[u][router] = (self.rt_tbl_D[v][router] + edge_distance) #update the distance to u
+                                self.rt_tbl_D[u][self.uniqueRouters[j]] = v_dist + edge_distance #update the distance to u
                                 self.print_routes
                         except KeyError:
                             print("Key error exception occurred" )
