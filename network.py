@@ -317,8 +317,35 @@ class Router:
                 if router not in self.rt_tbl_D[header]: #if the router is NOT in the dict of the header
                     #put it in the header's dict, set cost to inf
                     self.rt_tbl_D[header][router] = 999 #basically infinity, right?
+                    self.rt_tbl_D[router][header] = 999
         
+    
         #step 2: relax edges
+        
+        #run the algorithm on each router in the table
+        for router in self.uniqueRouters: #for every router (row) in the network,
+            # {header: {router: cost}}
+            #bellman ford starts here
+            i=1
+            #http://courses.csail.mit.edu/6.006/spring11/lectures/lec15.pdf
+            #rt_tbl is a list of edges.
+            
+            for i in range(len(self.rt_tbl_D)):
+                # for V-1 (the number of verticies minus one
+                for u in self.rt_tbl_D:
+                    #relax edge, represented as a call with the header
+                    #for each vertex's neighbor,
+                    for v in self.rt_tbl_D[u]: #iterate through each outgoing edge
+                        edge_distance = int(self.rt_tbl_D[u][v])
+                        u_dist = int(self.rt_tbl_D[u][router]) #distance to u vertex
+                        v_dist = int(self.rt_tbl_D[v][router]) #distance to v vertex
+                        try:                        
+                            if (u_dist > (v_dist + edge_distance)): 
+                                #if the edge plus the distance to vertex v is greater than the distance to u 
+                                self.rt_tbl_D[u][router] = (self.rt_tbl_D[v][router] + edge_distance) #update the distance to u
+                                self.print_routes
+                        except KeyError:
+                            print("Key error exception occurred" )
         
     ## thread target for the host to keep forwarding data
     def run(self):
