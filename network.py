@@ -275,15 +275,18 @@ class Router:
             for header in self.rt_tbl_D:
                 #for every node in the routing table,             
                 if header in self.cost_D: #narrow it down to only neighbors
+                    if not ((header == "H1") or (header == "H2")):
                     #header is in routing table and is reachable by the node
-                    dest_d = int(self.rt_tbl_D[dest][self.name]) #distance to the destination
-                    node_d = int(self.rt_tbl_D[header][self.name]) #distance to potential outgoing node
-                    node_dest_d = int(self.rt_tbl_D[header][dest]) #distance from the potential outgoing node to the destination
-                    
-                    if v_d > (node_d + node_dest_d): #find the minimum
-                        #new minimum
-                        v_d = node_d
-                        v = header
+                        dest_d = int(self.rt_tbl_D[dest][self.name]) #distance to the destination
+                        node_d = int(self.rt_tbl_D[header][self.name]) #distance to potential outgoing node
+                        try:
+                            node_dest_d = int(self.rt_tbl_D[header][dest]) #distance from the potential outgoing node to the destination
+                        except KeyError:
+                            print("Key Error")
+                        if v_d > (node_d + node_dest_d): #find the minimum
+                            #new minimum
+                            v_d = node_d
+                            v = header
                         
             out_intf = self.cost_D[v][0] #set the outgoing interface to the result.
             
@@ -353,9 +356,9 @@ class Router:
         for j in range(router_count): #for every router (row) in the network,
             #step 1: set all unknowns to infinity
             for header in self.rt_tbl_D:
-                print("Detecting gaps for {} to {}".format(header,self.uniqueRouters[j]))
+                #print("Detecting gaps for {} to {}".format(header,self.uniqueRouters[j]))
                 if self.uniqueRouters[j] not in self.rt_tbl_D[header]: #if the router is NOT in the dict of the header
-                    print("Gap filled {} to {}".format(header, self.uniqueRouters[j]))
+                    #print("Gap filled {} to {}".format(header, self.uniqueRouters[j]))
                     #put it in the header's dict, set cost to inf
                     self.rt_tbl_D[header][self.uniqueRouters[j]] = 999 #basically infinity, right?
                     self.rt_tbl_D[self.uniqueRouters[j]][header] = 999
