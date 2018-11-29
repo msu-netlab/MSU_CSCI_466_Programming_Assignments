@@ -277,11 +277,9 @@ class Router:
                 if header in self.cost_D: #narrow it down to only neighbors
                     #header is in routing table and is reachable by the node
 
-                    if not self.rt_tbl_D.get(dest) == None:
-                        dest_d = int(self.rt_tbl_D[dest][self.name]) #distance to the destination
-                        node_dest_d = int(self.rt_tbl_D[header][dest]) #distance from the potential outgoing node to the destination
-                    else:
-                        node_d = int(self.rt_tbl_D[header][self.name]) #distance to potential outgoing node
+                    dest_d = int(self.rt_tbl_D[dest][self.name]) #distance to the destination
+                    node_dest_d = int(self.rt_tbl_D[header][dest]) #distance from the potential outgoing node to the destination
+                    node_d = int(self.rt_tbl_D[header][self.name]) #distance to potential outgoing node
                     
                     
                     if v_d > (node_d + node_dest_d): #find the minimum
