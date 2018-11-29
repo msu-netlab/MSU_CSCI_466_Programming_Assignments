@@ -285,7 +285,7 @@ class Router:
                     try:
                         if v_d > (dest_d + node_d):  # find the minimum
                             # new minimum
-                            v_d = dest_d + node_d
+                            v_d = dest_d
                             v = header
                     except KeyError:
                         print("Key Error: Neighbor is likely host")
