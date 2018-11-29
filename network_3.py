@@ -145,40 +145,40 @@ class Router:
         #TODO: set up the routing table for connected hosts
         # {destination: {router: cost}} ##Initial setup
         self.rt_tbl_D = {name:{name:0}}    
-        keys = list(cost_D.keys());
-        values = list(cost_D.values());
+        keys = list(cost_D.keys())
+        values = list(cost_D.values())
         for i in range(len(keys)):
             self.rt_tbl_D[keys[i]] = {name:list(values[i].values())[0]}
-        self.print_routes();
+        self.print_routes()
         print('%s: Initialized routing table' % self)    
     def getCurrentRoutingTable(self):
         routingTableString = self.name + "-"
-        values = list(self.rt_tbl_D.values());
-        keys = list(self.rt_tbl_D.keys());
-        first = True;
+        values = list(self.rt_tbl_D.values())
+        keys = list(self.rt_tbl_D.keys())
+        first = True
         for i in range(len(keys)):
             if first:
-                first = False;
+                first = False
                 routingTableString+= keys[i] + "," + str(list(values[i])[0]) + "," + str(list(values[i].values())[0])
             else:
                 routingTableString+= ":" + keys[i] + "," + str(list(values[i])[0]) + "," + str(list(values[i].values())[0])
-        print(routingTableString);
-        return routingTableString;
+        print(routingTableString)
+        return routingTableString
     ## Print routing table
     def updateUniqueRouters(self):
-        self.uniqueRouters = [];
-        values = self.rt_tbl_D.values();
-        routers = {};
+        self.uniqueRouters = []
+        values = self.rt_tbl_D.values()
+        routers = {}
         for i in range(len(values)):
             if list(list(values)[i].keys())[0] not in routers:
-                routers[list(list(values)[i].keys())[0]] = "";
+                routers[list(list(values)[i].keys())[0]] = ""
         for item in routers:
-            self.uniqueRouters.append(item);
+            self.uniqueRouters.append(item)
     def print_routes(self):
-        keys = self.rt_tbl_D.keys();
-        values = self.rt_tbl_D.values();
-        columns = len(keys)+1;
-        keyString = "";
+        keys = self.rt_tbl_D.keys()
+        values = self.rt_tbl_D.values()
+        columns = len(keys)+1
+        keyString = ""
         topTableString = "╒"
         headerBottomTableString = "╞"
         tableRowSeperator = "├"
@@ -195,39 +195,39 @@ class Router:
                 headerBottomTableString+= "══════╡\n"
                 tableRowSeperator += "──────┤\n"
                 tableBottom += "══════╛\n"
-        itemSpace = "      ";
+        itemSpace = "      "
         for item in keys:
-            keyString += "  " + item + "  │";
-        costRows = [];
-        changed = [];
-        self.updateUniqueRouters();
+            keyString += "  " + item + "  │"
+        costRows = []
+        changed = []
+        self.updateUniqueRouters()
         for item in self.uniqueRouters:
-            costRows.append("│  " + item + "  │");
+            costRows.append("│  " + item + "  │")
         for i in range(len(values)):
-            changedFlag = False;
+            changedFlag = False
             for j in range(len(costRows)):
                 for k in range(len(list(values)[i].keys())):
                     if list(list(values)[i].keys())[k] == self.uniqueRouters[j]:
                         formattedVal = itemSpace[0:len(itemSpace)-len(str(list(list(values)[i].values())[k]))] + str(list(list(values)[i].values())[k])     
                         costRows[j]+= formattedVal + "│"
-                        changed.append(j);
-                        changedFlag=True;
+                        changed.append(j)
+                        changedFlag=True
             if changedFlag:
-                changedFlag = False;
+                changedFlag = False
                 for l in range(len(costRows)):
                     if(l in changed):
-                        continue;
+                        continue
                     else:
                         costRows[l] += "      │"
-                changed = [];
+                changed = []
                 
-        sys.stdout.write(topTableString + "│  " +self.name + "  │" + keyString + "\n" + headerBottomTableString);
+        sys.stdout.write(topTableString + "│  " +self.name + "  │" + keyString + "\n" + headerBottomTableString)
         for i in range(len(costRows)):
             if i+1 != len(costRows):
-                sys.stdout.write(costRows[i] + "\n" + tableRowSeperator);
+                sys.stdout.write(costRows[i] + "\n" + tableRowSeperator)
             else:
-                sys.stdout.write(costRows[i] + "\n");
-        sys.stdout.write(tableBottom);
+                sys.stdout.write(costRows[i] + "\n")
+        sys.stdout.write(tableBottom)
     ## called when printing the object
     def __str__(self):
         return self.name
@@ -289,14 +289,14 @@ class Router:
                     except KeyError:
                         print("Key Error: Neighbor is likely host")
             #new addition
-            chosenVal = 999;
-            chosenRoute = "";
+            chosenVal = 999
+            chosenRoute = ""
             if v not in self.cost_D:#if v is a neighbor
                 for value in self.rt_tbl_D[v]:#interate through values
-                    cost = self.rt_tbl_D[v][value];#get cost in routing table
+                    cost = self.rt_tbl_D[v][value]#get cost in routing table
                     if int(cost) < int(chosenVal):#find lowest cost router
-                        chosenRoute = value;
-                        chosenVal = cost;
+                        chosenRoute = value
+                        chosenVal = cost
                 for key in self.cost_D[chosenRoute]:#set the chosenRoutes interface
                     out_intf = self.cost_D[chosenRoute][key] #set the outgoing interface to the result.
             else: # is a neighbor
@@ -333,23 +333,23 @@ class Router:
         #TODO: add logic to update the routing tables and
         # possibly send out routing updates
         updates = p.to_byte_S()[6:].split('-')
-        name = updates[0];
-        update = updates[1].split(":");
+        name = updates[0]
+        update = updates[1].split(":")
         #Raw updating
         for j in update: #for each update
-            items = j.split(","); #items: 0=dest 1 1=dest 2 2=cost between dest 1 and dest 2
+            items = j.split(",") #items: 0=dest 1 1=dest 2 2=cost between dest 1 and dest 2
             if items[0] in self.rt_tbl_D: #if dest 1 is in table headers
                 values = list(self.rt_tbl_D.values()) #values is a list of dicts of form {router: cost}
-                exists = False; #assume that it doesn't exist
+                exists = False #assume that it doesn't exist
                 #already in table
                 for i in range(len(values)): #for as many values(which are mappings of dests to routers) 
-                    vks = list(values[i].keys()); #vks = list of routers in 
+                    vks = list(values[i].keys()) #vks = list of routers in
                     for vk in vks: #for each router in the router list,
                         if vk == items[1]: #if the router is dest 2
                             self.rt_tbl_D[items[0]][items[1]] = items[2] #set the cost of dest 1 to dest 2 in the table to the cost in items
                             self.rt_tbl_D[items[1]][items[0]] = items[2] #set the cost of dest 1 to dest 2 in the table to the cost in items
                             #do stuff/compare
-                            exists = True;
+                            exists = True
                 if not exists: #will always default to this
                     self.rt_tbl_D[items[0]][items[1]] = items[2]  #set the cost of dest 1 to dest 2 in the table to the cost in items
                     self.rt_tbl_D[items[1]][items[0]] = items[2] #set the cost of dest 1 to dest 2 in the table to the cost in items
@@ -366,7 +366,7 @@ class Router:
                     self.rt_tbl_D[router][header] = 999'''
         
     
-        self.updateUniqueRouters();
+        self.updateUniqueRouters()
         #run the algorithm on each router in the table
         router_count = len(self.uniqueRouters)
         print(router_count)
@@ -383,7 +383,7 @@ class Router:
             i=1
             #http://courses.csail.mit.edu/6.006/spring11/lectures/lec15.pdf
             #rt_tbl is a list of edges.
-            updated = False;
+            updated = False
             #step 2: relax edges |V|-1 times
             for i in range(len(self.rt_tbl_D)):
                 # for V-1 (the number of verticies minus one
@@ -399,15 +399,15 @@ class Router:
                                 #if the edge plus the distance to vertex v is greater than the distance to u 
                                 self.rt_tbl_D[u][self.uniqueRouters[j]] = v_dist + edge_distance #update the distance to u
                                 updated = True
-                                self.updateUniqueRouters();
+                                self.updateUniqueRouters()
                         except KeyError:
                             print("Key error exception occurred" )
         if(updated):
             #cost_D {neighbor: {interface: cost}}
             for i in range(len(self.cost_D.values())):#for all values
                 for x in range(len(list(self.cost_D.values())[i].keys())):
-                    interface = list(list(self.cost_D.values())[i].keys())[x];
-                    self.send_routes(interface);
+                    interface = list(list(self.cost_D.values())[i].keys())[x]
+                    self.send_routes(interface)
         
     ## thread target for the host to keep forwarding data
     def run(self):

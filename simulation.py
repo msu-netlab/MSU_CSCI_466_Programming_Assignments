@@ -39,7 +39,7 @@ if __name__ == '__main__':
     thread_L = []
     for obj in object_L:
         thread_L.append(threading.Thread(name=obj.__str__(), target=obj.run)) 
-    sys.stdout.write("\n");
+    sys.stdout.write("\n")
     for t in thread_L:
         t.start()
     
@@ -50,8 +50,8 @@ if __name__ == '__main__':
     #Table Header Bottom
     for i in range(len(object_L)):
         if str(type(object_L[i])) == "<class 'network.Router'>":
-            object_L[i].print_routes();
-    sleep(10);
+            object_L[i].print_routes()
+    sleep(10)
     #send packet from host 1 to host 2
     host_1.udt_send('H2', 'MESSAGE_FROM_H1')
     sleep(simulation_time)
