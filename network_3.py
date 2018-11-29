@@ -337,6 +337,7 @@ class Router:
         updates = p.to_byte_S()[6:].split('-')
         name = updates[0]
         update = updates[1].split(":")
+        updated = False
         # Raw updating
         for j in update:  # for each update
             items = j.split(",")  # items: 0=dest 1 1=dest 2 2=cost between dest 1 and dest 2
@@ -351,10 +352,13 @@ class Router:
                             self.rt_tbl_D[items[0]][items[1]] = items[2]  # set the cost of dest 1 to dest 2 in the table to the cost in items
                             # do stuff/compare
                             exists = True
+
                 if not exists:  # will always default to this
                     self.rt_tbl_D[items[0]][items[1]] = items[2]  # set the cost of dest 1 to dest 2 in the table to the cost in items
+                    updated = True
             else:
                 self.rt_tbl_D[items[0]] = {items[1]: items[2]}
+                updated = True
 
         '''for header in self.rt_tbl_D: #see if header is missing routers in its dict
             for router in self.uniqueRouters: #for each router,
@@ -367,7 +371,6 @@ class Router:
         # run the algorithm on each router in the table
         router_count = len(self.uniqueRouters)
         print(router_count)
-        updated = False
         for j in range(router_count):  # for every router (row) in the network,
             # step 1: set all unknowns to infinity
             for header in self.rt_tbl_D:
@@ -380,7 +383,7 @@ class Router:
             # bellman ford starts here
             # http://courses.csail.mit.edu/6.006/spring11/lectures/lec15.pdf
             # rt_tbl is a list of edges.
-
+            self.updateUniqueRouters()
             # step 2: relax edges |V|-1 times
             for i in range(len(self.rt_tbl_D)):
                 # for V-1 (the number of verticies minus one
