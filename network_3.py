@@ -283,15 +283,13 @@ class Router:
                     dest_d = int(self.rt_tbl_D[dest][self.name])  # distance to the destination
                     node_d = int(self.rt_tbl_D[header][self.name])  # distance to potential outgoing node
                     try:
-                        if v_d > (node_d + dest_d):  # find the minimum
+                        if v_d > (dest_d + node_d):  # find the minimum
                             # new minimum
-                            v_d = node_d
+                            v_d = dest_d + node_d
                             v = header
                     except KeyError:
                         print("Key Error: Neighbor is likely host")
             # new addition
-            print(v)
-            print(v_d)
             chosenVal = 999
             chosenRoute = ""
             if v not in self.cost_D:  # if v is NOT a neighbor
@@ -385,7 +383,7 @@ class Router:
             # rt_tbl is a list of edges.
             self.updateUniqueRouters()
             # step 2: relax edges |V|-1 times
-            for i in range(len(self.rt_tbl_D)):
+            for i in range(len(self.rt_tbl_D)-1):
                 # for V-1 (the number of verticies minus one
                 for u in self.rt_tbl_D:
                     # relax edge, represented as a call with the header
