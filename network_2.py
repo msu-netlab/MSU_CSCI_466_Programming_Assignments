@@ -1,6 +1,5 @@
 import queue
 import threading
-from collections import defaultdict
 import sys
 import math
 
@@ -141,7 +140,7 @@ class Router:
         #create a list of interfaces
         self.intf_L = [Interface(max_queue_size) for _ in range(len(cost_D))]
         #save neighbors and interfeces on which we connect to them
-        self.cost_D = cost_D    #cost_D {neighbor: {interface: cost}}
+        self.cost_D = cost_D    # {neighbor: {interface: cost}}
         #TODO: set up the routing table for connected hosts
         # {destination: {router: cost}} ##Initial setup
         self.rt_tbl_D = {name:{name:0}}    
@@ -165,15 +164,6 @@ class Router:
         print(routingTableString);
         return routingTableString;
     ## Print routing table
-    def updateUniqueRouters(self):
-        self.uniqueRouters = [];
-        values = self.rt_tbl_D.values();
-        routers = {};
-        for i in range(len(values)):
-            if list(list(values)[i].keys())[0] not in routers:
-                routers[list(list(values)[i].keys())[0]] = "";
-        for item in routers:
-            self.uniqueRouters.append(item);
     def print_routes(self):
         keys = self.rt_tbl_D.keys();
         values = self.rt_tbl_D.values();
@@ -196,18 +186,23 @@ class Router:
                 tableRowSeperator += "──────┤\n"
                 tableBottom += "══════╛\n"
         itemSpace = "      ";
+        routers = {};
         for item in keys:
             keyString += "  " + item + "  │";
+        for i in range(len(values)):
+            if list(list(values)[i].keys())[0] not in routers:
+                routers[list(list(values)[i].keys())[0]] = "";
         costRows = [];
+        uniqueRouters = [];
         changed = [];
-        self.updateUniqueRouters();
-        for item in self.uniqueRouters:
+        for item in routers:
             costRows.append("│  " + item + "  │");
+            uniqueRouters.append(item);
         for i in range(len(values)):
             changedFlag = False;
             for j in range(len(costRows)):
                 for k in range(len(list(values)[i].keys())):
-                    if list(list(values)[i].keys())[k] == self.uniqueRouters[j]:
+                    if list(list(values)[i].keys())[k] == uniqueRouters[j]:
                         formattedVal = itemSpace[0:len(itemSpace)-len(str(list(list(values)[i].values())[k]))] + str(list(list(values)[i].values())[k])     
                         costRows[j]+= formattedVal + "│"
                         changed.append(j);
@@ -228,6 +223,7 @@ class Router:
             else:
                 sys.stdout.write(costRows[i] + "\n");
         sys.stdout.write(tableBottom);
+
     ## called when printing the object
     def __str__(self):
         return self.name
@@ -258,43 +254,8 @@ class Router:
         try:
             # TODO: Here you will need to implement a lookup into the 
             # forwarding table to find the appropriate outgoing interface
-            # for now we assume the outgoing interface is 1
-            
-            #we know the length of the shortest path 
-            #we know how many edges and verticies there are
-            #we don't know what the shortest path is... like how is the program going to trace the path??
-            #simple: we use the bellman ford equation as a verification instead of an algorithm 
-            
-            #first, let's make it easy. 
-            dest = p.dst
-            
-            #then we'll set aside some variable for the node to forward to, let's call it v
-            v_d = 999 #distance to v 
-            v = dest
-            
-            #cost_D {neighbor: {interface: cost}}
-            #okay, so now we know where we're going.
-            for header in self.rt_tbl_D:
-                #for every node in the routing table,             
-                if header in self.cost_D: #narrow it down to only neighbors
-                    if not ((header == "H1") or (header == "H2")):
-                        node_dest_d = 0;
-                    #header is in routing table and is reachable by the node
-                        dest_d = int(self.rt_tbl_D[dest][self.name]) #distance to the destination
-                        node_d = int(self.rt_tbl_D[header][self.name]) #distance to potential outgoing node
-                        try:
-                            node_dest_d = int(self.rt_tbl_D[header][dest]) #distance from the potential outgoing node to the destination
-                            if v_d > (node_d + node_dest_d): #find the minimum
-                                #new minimum
-                                v_d = node_d
-                                v = header
-                        except KeyError:
-                            print("Key Error")
-                       
-                        
-            out_intf = self.cost_D[v][0] #set the outgoing interface to the result.
-            
-            self.intf_L[out_intf].put(p.to_byte_S(), 'out', True)
+            # for now we assume the outgoing interface is 1                
+            self.intf_L[i].put(p.to_byte_S(), 'out', True)
             print('%s: forwarding packet "%s" from interface %d to %d' % \
                 (self, p, i, 1))
         except queue.Full:
@@ -324,78 +285,25 @@ class Router:
         name = updates[0];
         update = updates[1].split(":");
         #Raw updating
-        for j in update: #for each update
-            items = j.split(","); #items: 0=dest 1 1=dest 2 2=cost between dest 1 and dest 2
-            if items[0] in self.rt_tbl_D: #if dest 1 is in table headers
-                values = list(self.rt_tbl_D.values()) #values is a list of dicts of form {router: cost}
-                exists = False; #assume that it doesn't exist
+        for j in update:
+            items = j.split(",");
+            if items[0] in self.rt_tbl_D:
+                values = list(self.rt_tbl_D.values())
+                exists = False;
                 #already in table
-                for i in range(len(values)): #for as many values(which are mappings of dests to routers) 
-                    vks = list(values[i].keys()); #vks = list of routers in 
-                    for vk in vks: #for each router in the router list,
-                        if vk == items[1]: #if the router is dest 2
-                            self.rt_tbl_D[items[0]][items[1]] = items[2] #set the cost of dest 1 to dest 2 in the table to the cost in items
+                for i in range(len(values)):
+                    vks = list(values[i].keys());
+                    for vk in vks:
+                        if vk == items[1]:
+                            self.rt_tbl_D[items[0]][items[1]] = items[2];
                             #do stuff/compare
                             exists = True;
-                if not exists: #will always default to this
-                    self.rt_tbl_D[items[0]][items[1]] = items[2]  #set the cost of dest 1 to dest 2 in the table to the cost in items
+                if not exists:
+                    self.rt_tbl_D[items[0]][items[1]] = items[2];
             else:
-                self.rt_tbl_D[items[0]] = {items[1]:items[2]}
+                self.rt_tbl_D[items[0]] = {items[1]:items[2]};
         
-    
 
-        '''for header in self.rt_tbl_D: #see if header is missing routers in its dict
-            for router in self.uniqueRouters: #for each router,
-                if router not in self.rt_tbl_D[header]: #if the router is NOT in the dict of the header
-                    #put it in the header's dict, set cost to inf
-                    self.rt_tbl_D[header][router] = 999 #basically infinity, right?
-                    self.rt_tbl_D[router][header] = 999'''
-        
-    
-        self.updateUniqueRouters();
-        #run the algorithm on each router in the table
-        router_count = len(self.uniqueRouters)
-        print(router_count)
-        for j in range(router_count): #for every router (row) in the network,
-            #step 1: set all unknowns to infinity
-            for header in self.rt_tbl_D:
-                #print("Detecting gaps for {} to {}".format(header,self.uniqueRouters[j]))
-                if self.uniqueRouters[j] not in self.rt_tbl_D[header]: #if the router is NOT in the dict of the header
-                    #print("Gap filled {} to {}".format(header, self.uniqueRouters[j]))
-                    #put it in the header's dict, set cost to inf
-                    self.rt_tbl_D[header][self.uniqueRouters[j]] = 999 #basically infinity, right?
-                    self.rt_tbl_D[self.uniqueRouters[j]][header] = 999
-            # {header: {router: cost}}
-            #bellman ford starts here
-            i=1
-            #http://courses.csail.mit.edu/6.006/spring11/lectures/lec15.pdf
-            #rt_tbl is a list of edges.
-            updated = False;
-            #step 2: relax edges |V|-1 times
-            for i in range(len(self.rt_tbl_D)):
-                # for V-1 (the number of verticies minus one
-                for u in self.rt_tbl_D:
-                    #relax edge, represented as a call with the header
-                    #for each vertex's neighbor,
-                    for v in self.rt_tbl_D[u]: #iterate through each outgoing edge
-                        edge_distance = int(self.rt_tbl_D[u][v])
-                        u_dist = int(self.rt_tbl_D[u][self.uniqueRouters[j]]) #distance to u vertex
-                        v_dist = int(self.rt_tbl_D[v][self.uniqueRouters[j]]) #distance to v vertex
-                        try:                        
-                            if (u_dist > (v_dist + edge_distance)): 
-                                #if the edge plus the distance to vertex v is greater than the distance to u 
-                                self.rt_tbl_D[u][self.uniqueRouters[j]] = v_dist + edge_distance #update the distance to u
-                                updated = True
-                                self.updateUniqueRouters();
-                        except KeyError:
-                            print("Key error exception occurred" )
-            if(updated):
-                #cost_D {neighbor: {interface: cost}}
-                for i in range(len(self.cost_D.values())):#for all values
-                    for x in range(len(list(self.cost_D.values())[i].keys())):
-                        interface = list(list(self.cost_D.values())[i].keys())[x];
-                        self.send_routes(interface);
-        
     ## thread target for the host to keep forwarding data
     def run(self):
         print (threading.currentThread().getName() + ': Starting')

@@ -1,110 +1,132 @@
-# CSCI 466 PA3 - Network Layer: Data Plane
+# CSCI 466 Programming Assignment - Control Plane 
 
 ## Instructions
 
-Complete the following assignment in pairs.
-Submit your work on D2L into the "Programming Assignment&nbsp;3" folder before its due date. 
-All partners will submit the same solution and we will only grade one solution for each group.
 
+Complete the following assignment in pairs.
+Submit your work into the Dropbox on D2L into the “Programming Assignment 4” folder. 
+All partners will submit the same solution and we will only grade one solution for each group.
 
 ## Learning Objectives
 
-In this programming assignment you will:
+In this lab you will:
 
-- Packetize streams at the network layer
-- Implement packet segmentation
-- Implement forwarding through routing tables
+-   Design a control packet
 
+-   Implement a distance-vector routing protocol
 
-## Assignment
+-   Control routing using link costs
 
-During this project, you will implement several key data plane functions of a router, including stream packetization, packet segmentation, and forwarding.
-The next assignment will complement these functions at the control plane.
+## Overview
 
+In this project, you will implement a distance-vector routing protocol on a router. 
+Your task is to extend the given code to implement several router functions.
 
 ### Starting Code
 
-The starting code for this project provides you with the implementation of several network layers that cooperate to provide end-to-end communication.
+The starting code for this project provides you with the implementation several network layers that cooperate to provide end-to-end communication.
 
 ```
-NETWORK LAYER (network.py)
-DATA LINK LAYER (link.py)
+    NETWORK LAYER (network.py)
+    DATA LINK LAYER (link.py)
 ```
 
 The code also includes `simulation.py` that manages the threads running the different network objects.
 Currently, `simulation.py` defines the following network.
 
-![network_1](https://github.com/msu-netlab/MSU_CSCI_466_PAs/blob/data_plane/images/simple.png)
+![image](images/simple.png)
+<!-- <img src="images/simple.png" alt="Drawing" style="width:400pt; height:100pt"/> -->
 
-At a high level a network defined in `simulation.py` includes hosts, routers and links.
-`Hosts` generate and receive traffic.
-`Routers` forward traffic from one `Interface` to another based on routing tables that you will implement.
-`Links` connect network interfaces of routers and hosts.
-Finally, the `LinkLayer` forwards traffic along links.
-Please consult the [video lecture](https://youtu.be/-JXvrxjPo7o) for a more in-depth explanation of the code.
+At a high level a network defined in `simulation.py` includes hosts, routers and links. 
+`Hosts` generate and receive traffic. 
+`Routers` forward traffic from one `Interface` to another based on routing tables that you will implement. 
+`Routers` also exchange routing tables to establish forwarding paths.
+`Links` connect network interfaces of routers and hosts. 
+Finally, the `LinkLayer` forwards traffic along links. 
+Please consult the [video lecture](https://www.youtube.com/watch?v=vsB5zJLCU2k) for a more in-depth explanation of the code.
 
 ### Program Invocation
 
 To run the starting code you may execute:
 
 ```
-python simulation.py
+    python simulation.py
 ```
 
-The current `simulation_time` in `simulation.py` is one second.
-As the network becomes more complex and takes longer to execute, you may need to extend the simulation to allow all the packets to be transfered. 
+The current `simulation_time` in `simulation.py` is one second. As the network becomes more complex and takes longer to execute, you may need to extend the simulation to allow all the packets to be transfered.
 
 
-## Grading Rubric
+## Assignment
 
-Your task is to extend the given code to implement several data link router functions.
+1. [2 points] In the starting code the routing table is an empty dictionary.
+	Set up the routing table based on the `cost_D` parameter of the `Router` constructor.
+	The implement a _'pretty'_ print of the routing table in `Router.print_routes()` to show a routing table as follows:
 
-* \[2 points\] Currently `simulation.py` is configured to send three very short messages.
-  Instead, generate a message for `Host_2` that's at least 80 characters long.
-  You will notice that this messages is to large for the link MTUs.
-  Your first task is to break this message up into two separate packets.
+	```
+	╒══════╤══════╤══════╤══════╤══════╕
+	│ RA   │   H1 │   H2 │   RA │   RB │
+	╞══════╪══════╪══════╪══════╪══════╡
+	│ RA   │    1 │    4 │    0 │    1 │
+	├──────┼──────┼──────┼──────┼──────┤
+	│ RB   │    2 │    3 │    1 │    0 │
+	╘══════╧══════╧══════╧══════╧══════╛
+ 	```  
+ 	
+	where the top left corner represents the router from which this tables was printed, the rest of the top row represents the different destinations in the network, the rest of the left column represents paths through known routers, and the numbers represent path costs. 
+	In other words the way to read this table is (assume column row indexing): router `RA`(0,0) knows that the cost to destination `H2`(2,0) through router `RB`(0,2) is `3`(2,2).
+ 	This table corresponds to what the final routing table should be for `RA` in the above network.
 
-  Implement your solution in files `link_1.py`, `network_1.py`, and `simulation_1.py`.
-
-
-* \[10 points\] The packets you created are small enough to pass over the links. 
-  However, if we change the MTU of the second link (between `Router_A` and `Host_2`) to 30, the packets will now need to be segmented.
-
-  Your task is to extend the network layer to support segmentation.
-  Study lecture notes and the book on how IP implements segmentation.
-  Extend the classes (including packet format) in `network.py` to match IP's mechanisms for packet segmentation and reconstruction. 
-
-  Implement your solution in files `link_2.py`, `network_2.py`, and `simulation_2.py`.
-
-
-* \[13 points\] The current router implementation supports very simple forwarding.
-  The router has only one input and one output interface and just forwards packets from one to the other.
-  Your tasks is to implement forwarding of packets within routers based on routing tables.
-
-  First configure `simulation.py` to reflect the following network topology.
-
-  ![network_2](https://github.com/msu-netlab/MSU_CSCI_466_PAs/blob/data_plane/images/network.png)
-
-  Second, create routing tables so that both Host 1 and Host 2 can send packets to Host 3 and Host 4 respectively.
-  The routing table for each router should be passed into the `Router` constructor, and so should be defined in `simulation.py`.
-  The format of these is up to you.
-  You will also need to modify the `Router` class to forward the packets correctly between interfaces according to your routing tables.
-
-Finally, third, configure the routing tables to forward packets from Host 1 through Router B and from Host 2 through Router C.
-You may extend `NetworkPacket` with a source address, but it is not necessary to forward a packet onto different paths.
-
-  Implement your solution in files `link_3.py`, `network_3.py`, and `simulation_3.py`.
-
-* \[1 point\] BONUS: The communication in the network above is one directional.
-  Extend the network to carry packets both ways and have Host 3 send acknowledgements to Hosts 1 and 2.
-
-  Implement your solution in files `link_4.py`, `network_4.py`, and `simulation_4.py`.
+ 	Getting this pretty print to work will be invaluable to you in debugging your routing protocol implementation.
 
 
-
-## What to Submit
-
-You will submit the different `link.py`, `network.py`, and `simulation.py` files.
-You will also submit a link to a single YouTube video under 5 minutes in length that shows the execution of your code implementing the different functionalities outlined in the grading rubric.
+2. [2 points] Currently `Router.send_routes()` does not send route updates correctly. 
+Modify that function to send out route updates as defined in the distance-vector protocol discussed in class and your textbook. 
+You will need to come up with a message that encodes the state of your routing tables. 
 
 
+3. [6 points] Currently `Router.update_routes()` does not update routes correctly. 
+Modify that function to update the routing tables using the  Bellman-Ford equation based on updates from `Router.send_routes()`. 
+Be aware that receiving an update may mean that you will need to send an update as well!
+
+
+Submit a YouTube video link showing the execution of `simulation.py` until routing tables converge.
+	We will grade you based on the formatting routing tables, the content of your route update messages, and the final state of your routing tables.
+	Make sure that all of these are clearly visible in your output.
+	Submit your code as `link_1.py`, `network_1.py`, and `simulation_1.py`.
+
+
+4. [6 points] Currently `Router.forward_packet` always forwards packets on interface `1`.
+	Modify that function to forward packets according to the routing tables.
+
+5. [4 points] Modify `simulation.py` to have `Host 2` send a reply packet on the reverse route to `Host 1`
+
+
+Submit a YouTube video link showing the execution of `simulation.py` forwarding packets between the hosts.
+We will grade you based on correct use of the routing tables.
+Make sure your output shows the forwarding decisions made by routers.
+Submit your code as `link_2.py`, `network_2.py`, and `simulation_2.py`.
+
+
+
+6. [10 points] The current router implementation supports a very simple topology.
+
+	Configure `simulation.py` to reflect the following network topology.
+
+	![image](images/complex.png) 
+
+	Now change the link costs in that network such that packets from `Host 1` to `Host 2` follow a different path than packets from `Host 2` to `Host 1.`
+
+Submit a YouTube video link showing the execution of `simulation.py` forwarding packets between the hosts on two different paths.
+Make sure your output shows the final routing tables and the forwarding decisions made by routers.
+Also submit your code for this scenario as `link_3.py`, `network_3.py`, and `simulation_3.py`.
+
+
+7. [1 point] BONUS: Extend the code to support IP addressing both for the hosts and router interfaces. You will need to modify the output so that we can see addresses on both the hosts and the router interfaces as they forward the packets.
+
+Submit a YouTube video link showing your output from `simulation.py`.
+Submit `link_4.py`, `network_4.py`, and `simulation_4.py`.
+
+8. [1 point] BONUS: Implement IP multicast among a group of three hosts
+
+Submit a YouTube video link showing your output from `simulation.py`. 
+Submit `link_5.py`, `network_5.py`, and `simulation_5.py`.
