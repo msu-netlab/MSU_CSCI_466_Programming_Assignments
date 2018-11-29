@@ -165,6 +165,15 @@ class Router:
         print(routingTableString);
         return routingTableString;
     ## Print routing table
+    def updateUniqueRouters(self):
+        self.uniqueRouters = [];
+        values = self.rt_tbl_D.values();
+        routers = {};
+        for i in range(len(values)):
+            if list(list(values)[i].keys())[0] not in routers:
+                routers[list(list(values)[i].keys())[0]] = "";
+        for item in routers:
+            self.uniqueRouters.append(item);
     def print_routes(self):
         keys = self.rt_tbl_D.keys();
         values = self.rt_tbl_D.values();
@@ -187,23 +196,18 @@ class Router:
                 tableRowSeperator += "──────┤\n"
                 tableBottom += "══════╛\n"
         itemSpace = "      ";
-        routers = {};
         for item in keys:
             keyString += "  " + item + "  │";
-        for i in range(len(values)):
-            if list(list(values)[i].keys())[0] not in routers:
-                routers[list(list(values)[i].keys())[0]] = "";
         costRows = [];
-        uniqueRouters = [];
         changed = [];
-        for item in routers:
+        self.updateUniqueRouters();
+        for item in self.uniqueRouters:
             costRows.append("│  " + item + "  │");
-            uniqueRouters.append(item);
         for i in range(len(values)):
             changedFlag = False;
             for j in range(len(costRows)):
                 for k in range(len(list(values)[i].keys())):
-                    if list(list(values)[i].keys())[k] == uniqueRouters[j]:
+                    if list(list(values)[i].keys())[k] == self.uniqueRouters[j]:
                         formattedVal = itemSpace[0:len(itemSpace)-len(str(list(list(values)[i].values())[k]))] + str(list(list(values)[i].values())[k])     
                         costRows[j]+= formattedVal + "│"
                         changed.append(j);
@@ -224,8 +228,6 @@ class Router:
             else:
                 sys.stdout.write(costRows[i] + "\n");
         sys.stdout.write(tableBottom);
-        self.uniqueRouters = uniqueRouters #save this for later, updateRouters needs it
-
     ## called when printing the object
     def __str__(self):
         return self.name
@@ -276,17 +278,19 @@ class Router:
                 #for every node in the routing table,             
                 if header in self.cost_D: #narrow it down to only neighbors
                     if not ((header == "H1") or (header == "H2")):
+                        node_dest_d = 0;
                     #header is in routing table and is reachable by the node
                         dest_d = int(self.rt_tbl_D[dest][self.name]) #distance to the destination
                         node_d = int(self.rt_tbl_D[header][self.name]) #distance to potential outgoing node
                         try:
                             node_dest_d = int(self.rt_tbl_D[header][dest]) #distance from the potential outgoing node to the destination
+                            if v_d > (node_d + node_dest_d): #find the minimum
+                                #new minimum
+                                v_d = node_d
+                                v = header
                         except KeyError:
                             print("Key Error")
-                        if v_d > (node_d + node_dest_d): #find the minimum
-                            #new minimum
-                            v_d = node_d
-                            v = header
+                       
                         
             out_intf = self.cost_D[v][0] #set the outgoing interface to the result.
             
@@ -348,8 +352,7 @@ class Router:
                     self.rt_tbl_D[router][header] = 999'''
         
     
-
-        self.print_routes() #beacuse uniqueRouters ONLY updates in the print method, we need to run it one more time before we start the algorithm.
+        self.updateUniqueRouters();
         #run the algorithm on each router in the table
         router_count = len(self.uniqueRouters)
         print(router_count)
@@ -383,7 +386,7 @@ class Router:
                                 #if the edge plus the distance to vertex v is greater than the distance to u 
                                 self.rt_tbl_D[u][self.uniqueRouters[j]] = v_dist + edge_distance #update the distance to u
                                 updated = True
-                                self.print_routes
+                                self.updateUniqueRouters();
                         except KeyError:
                             print("Key error exception occurred" )
             if(updated):
