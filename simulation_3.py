@@ -6,16 +6,16 @@ import sys
 
 ##configuration parameters
 router_queue_size = 0 #0 means unlimited
-simulation_time = 4   #give the network_3 sufficient time to execute transfers
+simulation_time = 30   #give the network_3 sufficient time to execute transfers
 if __name__ == '__main__':
     object_L = [] #keeps track of objects, so we can kill their threads at the end
     #create network_3 hosts
     host_1 = network_3.Host('H1')
     host_2 = network_3.Host('H2')
-    cost_d_a = {'H1': {0: 1}, 'RB': {1: 1}, 'RC': {1: 1}};
+    cost_d_a = {'H1': {0: 1}, 'RB': {1: 2}, 'RC': {2: 1}};
     cost_d_b = {'RA': {0: 1}, 'RD': {1: 1}};
     cost_d_c = {'RA': {0: 1}, 'RD': {1: 1}};
-    cost_d_d = {'RB': {0: 1}, 'RC': {1: 1},'H2':{1: 1}};
+    cost_d_d = {'RB': {0: 1}, 'RC': {1: 1},'H2':{2: 1}};
     router_a = network_3.Router('RA',cost_d_a,router_queue_size)
     router_b = network_3.Router('RB',cost_d_b,router_queue_size);
     router_c = network_3.Router('RC',cost_d_c,router_queue_size);
