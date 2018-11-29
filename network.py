@@ -287,7 +287,7 @@ class Router:
                             v_d = node_d
                             v = header
                     except KeyError:
-                        print("Key Error")
+                        print("Key Error: Neighbor is likely host")
             #new addition
             chosenVal = 999;
             chosenRoute = "";
@@ -300,9 +300,13 @@ class Router:
                 for key in self.cost_D[chosenRoute]:#set the chosenRoutes interface
                     out_intf = self.cost_D[chosenRoute][key] #set the outgoing interface to the result.
             else: # is a neighbor
+                # @param cost_D: cost table to neighbors {neighbor: {interface: cost}}
                 for key in self.cost_D[v]: # iterate through values
-                    out_intf = self.cost_D[v][key] #set the outgoing interface to the result.
-            self.intf_L[out_intf].put(p.to_byte_S(), 'out', True) #send out
+                    out_intf = list(self.cost_D[v].keys())[0] #set the outgoing interface to the result. 
+            try:
+                self.intf_L[out_intf].put(p.to_byte_S(), 'out', True) #send out
+            except IndexError:
+                print("Index out of range, {}".format(out_intf))
             print('%s: forwarding packet "%s" from interface %d to %d' % \
                 (self, p, i, 1))
         except queue.Full:
