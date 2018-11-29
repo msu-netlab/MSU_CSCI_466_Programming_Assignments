@@ -284,15 +284,16 @@ class Router:
                     dest_d = int(self.rt_tbl_D[dest][self.name])  # distance to the destination
                     node_d = int(self.rt_tbl_D[header][self.name])  # distance to potential outgoing node
                     try:
-                        node_dest_d = int(
-                            self.rt_tbl_D[header][dest])  # distance from the potential outgoing node to the destination
-                        if v_d < (node_d + node_dest_d):  # find the minimum
+                        node_dest_d = int(self.rt_tbl_D[header][dest])  # distance from the potential outgoing node to the destination
+                        if v_d > (node_d + node_dest_d):  # find the minimum
                             # new minimum
                             v_d = node_d
                             v = header
                     except KeyError:
                         print("Key Error: Neighbor is likely host")
             # new addition
+            print(v)
+            print(v_d)
             chosenVal = 999
             chosenRoute = ""
             if v not in self.cost_D:  # if v is NOT a neighbor
@@ -302,7 +303,7 @@ class Router:
                         chosenRoute = value
                         chosenVal = cost
                 for key in self.cost_D[chosenRoute]:  # set the chosenRoutes interface
-                    out_intf = self.cost_D[chosenRoute][key]  # set the outgoing interface to the result.
+                    out_intf = key  # set the outgoing interface to the result.
             else:  # is a neighbor
                 # @param cost_D: cost table to neighbors {neighbor: {interface: cost}}
                 for key in self.cost_D[v]:  # iterate through values
@@ -351,14 +352,10 @@ class Router:
                         if vk == items[1]:  # if the router is dest 2
                             self.rt_tbl_D[items[0]][items[1]] = items[
                                 2]  # set the cost of dest 1 to dest 2 in the table to the cost in items
-                            self.rt_tbl_D[items[1]][items[0]] = items[
-                                2]  # set the cost of dest 1 to dest 2 in the table to the cost in items
                             # do stuff/compare
                             exists = True
                 if not exists:  # will always default to this
                     self.rt_tbl_D[items[0]][items[1]] = items[
-                        2]  # set the cost of dest 1 to dest 2 in the table to the cost in items
-                    self.rt_tbl_D[items[1]][items[0]] = items[
                         2]  # set the cost of dest 1 to dest 2 in the table to the cost in items
             else:
                 self.rt_tbl_D[items[0]] = {items[1]: items[2]}

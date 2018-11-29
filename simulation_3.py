@@ -38,6 +38,13 @@ if __name__ == '__main__':
     link_layer.add_link(link_3.Link(router_c, 1, router_d, 1))
     link_layer.add_link(link_3.Link(router_b, 1, router_d, 0))
     link_layer.add_link(link_3.Link(router_d, 2, host_2, 0))
+
+    link_layer.add_link(link_3.Link(router_a, 0,host_1, 0))
+    link_layer.add_link(link_3.Link(router_b, 0,router_a, 1))
+    link_layer.add_link(link_3.Link(router_c, 0,router_a, 2))
+    link_layer.add_link(link_3.Link(router_d, 1,router_c, 1))
+    link_layer.add_link(link_3.Link(router_d, 0,router_b, 1))
+    link_layer.add_link(link_3.Link(host_2, 0,router_d, 2))
     # start all the objects
     thread_L = []
     for obj in object_L:
