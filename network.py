@@ -276,9 +276,13 @@ class Router:
                 #for every node in the routing table,             
                 if header in self.cost_D: #narrow it down to only neighbors
                     #header is in routing table and is reachable by the node
-                    dest_d = int(self.rt_tbl_D[dest][self.name]) #distance to the destination
-                    node_d = int(self.rt_tbl_D[header][self.name]) #distance to potential outgoing node
-                    node_dest_d = int(self.rt_tbl_D[header][dest]) #distance from the potential outgoing node to the destination
+
+                    if not self.rt_tbl_D.get(dest) == None:
+                        dest_d = int(self.rt_tbl_D[dest][self.name]) #distance to the destination
+                        node_dest_d = int(self.rt_tbl_D[header][dest]) #distance from the potential outgoing node to the destination
+                    else:
+                        node_d = int(self.rt_tbl_D[header][self.name]) #distance to potential outgoing node
+                    
                     
                     if v_d > (node_d + node_dest_d): #find the minimum
                         #new minimum
@@ -350,6 +354,7 @@ class Router:
         #run the algorithm on each router in the table
         router_count = len(self.uniqueRouters)
         print(router_count)
+        updated = False;
         for j in range(router_count): #for every router (row) in the network,
             #step 1: set all unknowns to infinity
             for header in self.rt_tbl_D:
@@ -364,7 +369,7 @@ class Router:
             i=1
             #http://courses.csail.mit.edu/6.006/spring11/lectures/lec15.pdf
             #rt_tbl is a list of edges.
-            updated = False;
+            
             #step 2: relax edges |V|-1 times
             for i in range(len(self.rt_tbl_D)):
                 # for V-1 (the number of verticies minus one
@@ -379,16 +384,16 @@ class Router:
                             if (u_dist > (v_dist + edge_distance)): 
                                 #if the edge plus the distance to vertex v is greater than the distance to u 
                                 self.rt_tbl_D[u][self.uniqueRouters[j]] = v_dist + edge_distance #update the distance to u
-                                updated = True
-                                self.print_routes
+                                updated = True# we updated! 
+                                self.print_routes()
                         except KeyError:
                             print("Key error exception occurred" )
-            if(updated):
-                #cost_D {neighbor: {interface: cost}}
-                for i in range(len(self.cost_D.values())):#for all values
-                    for x in range(len(list(self.cost_D.values())[i].keys())):
-                        interface = list(list(self.cost_D.values())[i].keys())[x];
-                        self.send_routes(interface);
+        if(updated):#if updated send update to all neighbors
+            #cost_D {neighbor: {interface: cost}}
+            for i in range(len(self.cost_D.values())):#for all values
+                for x in range(len(list(self.cost_D.values())[i].keys())):
+                    interface = list(list(self.cost_D.values())[i].keys())[x];
+                    self.send_routes(interface);
         
     ## thread target for the host to keep forwarding data
     def run(self):
