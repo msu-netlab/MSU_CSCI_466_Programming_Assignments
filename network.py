@@ -277,24 +277,32 @@ class Router:
             for header in self.rt_tbl_D:
                 #for every node in the routing table,             
                 if header in self.cost_D: #narrow it down to only neighbors
-                    if not ((header == "H1") or (header == "H2")):
-                        node_dest_d = 0;
                     #header is in routing table and is reachable by the node
-                        dest_d = int(self.rt_tbl_D[dest][self.name]) #distance to the destination
-                        node_d = int(self.rt_tbl_D[header][self.name]) #distance to potential outgoing node
-                        try:
-                            node_dest_d = int(self.rt_tbl_D[header][dest]) #distance from the potential outgoing node to the destination
-                            if v_d > (node_d + node_dest_d): #find the minimum
-                                #new minimum
-                                v_d = node_d
-                                v = header
-                        except KeyError:
-                            print("Key Error")
-                       
-                        
-            out_intf = self.cost_D[v][0] #set the outgoing interface to the result.
-            
-            self.intf_L[out_intf].put(p.to_byte_S(), 'out', True)
+                    dest_d = int(self.rt_tbl_D[dest][self.name]) #distance to the destination
+                    node_d = int(self.rt_tbl_D[header][self.name]) #distance to potential outgoing node
+                    try:
+                        node_dest_d = int(self.rt_tbl_D[header][dest]) #distance from the potential outgoing node to the destination
+                        if v_d < (node_d + node_dest_d): #find the minimum
+                            #new minimum
+                            v_d = node_d
+                            v = header
+                    except KeyError:
+                        print("Key Error")
+            #new addition
+            chosenVal = 999;
+            chosenRoute = "";
+            if v not in self.cost_D:#if v is a neighbor
+                for value in self.rt_tbl_D[v]:#interate through values
+                    cost = self.rt_tbl_D[v][value];#get cost in routing table
+                    if int(cost) < int(chosenVal):#find lowest cost router
+                        chosenRoute = value;
+                        chosenVal = cost;
+                for key in self.cost_D[chosenRoute]:#set the chosenRoutes interface
+                    out_intf = self.cost_D[chosenRoute][key] #set the outgoing interface to the result.
+            else: # is a neighbor
+                for key in self.cost_D[v]: # iterate through values
+                    out_intf = self.cost_D[v][key] #set the outgoing interface to the result.
+            self.intf_L[out_intf].put(p.to_byte_S(), 'out', True) #send out
             print('%s: forwarding packet "%s" from interface %d to %d' % \
                 (self, p, i, 1))
         except queue.Full:
@@ -335,10 +343,12 @@ class Router:
                     for vk in vks: #for each router in the router list,
                         if vk == items[1]: #if the router is dest 2
                             self.rt_tbl_D[items[0]][items[1]] = items[2] #set the cost of dest 1 to dest 2 in the table to the cost in items
+                            self.rt_tbl_D[items[1]][items[0]] = items[2] #set the cost of dest 1 to dest 2 in the table to the cost in items
                             #do stuff/compare
                             exists = True;
                 if not exists: #will always default to this
                     self.rt_tbl_D[items[0]][items[1]] = items[2]  #set the cost of dest 1 to dest 2 in the table to the cost in items
+                    self.rt_tbl_D[items[1]][items[0]] = items[2] #set the cost of dest 1 to dest 2 in the table to the cost in items
             else:
                 self.rt_tbl_D[items[0]] = {items[1]:items[2]}
         
@@ -364,7 +374,6 @@ class Router:
                     #print("Gap filled {} to {}".format(header, self.uniqueRouters[j]))
                     #put it in the header's dict, set cost to inf
                     self.rt_tbl_D[header][self.uniqueRouters[j]] = 999 #basically infinity, right?
-                    self.rt_tbl_D[self.uniqueRouters[j]][header] = 999
             # {header: {router: cost}}
             #bellman ford starts here
             i=1
