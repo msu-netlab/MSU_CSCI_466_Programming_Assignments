@@ -364,7 +364,7 @@ class Router:
             i=1
             #http://courses.csail.mit.edu/6.006/spring11/lectures/lec15.pdf
             #rt_tbl is a list of edges.
-            
+            updated = False;
             #step 2: relax edges |V|-1 times
             for i in range(len(self.rt_tbl_D)):
                 # for V-1 (the number of verticies minus one
@@ -379,9 +379,16 @@ class Router:
                             if (u_dist > (v_dist + edge_distance)): 
                                 #if the edge plus the distance to vertex v is greater than the distance to u 
                                 self.rt_tbl_D[u][self.uniqueRouters[j]] = v_dist + edge_distance #update the distance to u
+                                updated = True
                                 self.print_routes
                         except KeyError:
                             print("Key error exception occurred" )
+            if(updated):
+                #cost_D {neighbor: {interface: cost}}
+                for i in range(len(self.cost_D.values())):#for all values
+                    for x in range(len(list(self.cost_D.values())[i].keys())):
+                        interface = list(list(self.cost_D.values())[i].keys())[x];
+                        self.send_routes(interface);
         
     ## thread target for the host to keep forwarding data
     def run(self):
