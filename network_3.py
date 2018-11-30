@@ -332,6 +332,10 @@ class Router:
     def update_routes(self, p, i):
         # TODO: add logic to update the routing tables and
         # possibly send out routing updates
+        
+        if ("RA" in self.rt_tbl_D and self.name == "RD") or ("RD" in self.rt_tbl_D and self.name == "RA"):
+            print("Case")
+        
         updates = p.to_byte_S()[6:].split('-')
         name = updates[0]
         update = updates[1].split(":")
@@ -373,10 +377,11 @@ class Router:
             # step 1: set all unknowns to infinity
             for header in self.rt_tbl_D:
                 # print("Detecting gaps for {} to {}".format(header,self.uniqueRouters[j]))
-                if self.uniqueRouters[j] not in self.rt_tbl_D[header]:  # if the router is NOT in the dict of the header
-                    # print("Gap filled {} to {}".format(header, self.uniqueRouters[j]))
-                    # put it in the header's dict, set cost to inf
-                    self.rt_tbl_D[header][self.uniqueRouters[j]] = 999  # basically infinity, right?
+                    if self.uniqueRouters[j] not in self.rt_tbl_D[header]:  # if the router is NOT in the dict of the header
+                        # print("Gap filled {} to {}".format(header, self.uniqueRouters[j]))
+                        # put it in the header's dict, set cost to inf
+                        self.rt_tbl_D[header][self.uniqueRouters[j]] = 999  # basically infinity, right?
+                    
             # {header: {router: cost}}
             # bellman ford starts here
             # http://courses.csail.mit.edu/6.006/spring11/lectures/lec15.pdf
@@ -408,7 +413,8 @@ class Router:
                     interface = list(list(self.cost_D.values())[i].keys())[x]
                     self.send_routes(interface)
                     self.updateUniqueRouters()
-
+        for node in self.rt_tbl_D:
+            self.rt_tbl_D[node][node] = 0 #fix for wrong values 
     ## thread target for the host to keep forwarding data
     def run(self):
         print(threading.currentThread().getName() + ': Starting')
