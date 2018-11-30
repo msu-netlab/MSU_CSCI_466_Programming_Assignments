@@ -1,5 +1,5 @@
 import network_1
-import link
+import link_1
 import threading
 from time import sleep
 import sys
@@ -26,13 +26,13 @@ if __name__ == '__main__':
                                 max_queue_size=router_queue_size)
     object_L.append(router_b)
     # create a Link Layer to keep track of links between network_1 nodes
-    link_layer = link.LinkLayer()
+    link_layer = link_1.LinkLayer()
     object_L.append(link_layer)
 
     # add all the links - need to reflect the connectivity in cost_D tables above
-    link_layer.add_link(link.Link(host_1, 0, router_a, 0))
-    link_layer.add_link(link.Link(router_a, 1, router_b, 0))
-    link_layer.add_link(link.Link(router_b, 1, host_2, 0))
+    link_layer.add_link(link_1.Link(host_1, 0, router_a, 0))
+    link_layer.add_link(link_1.Link(router_a, 1, router_b, 0))
+    link_layer.add_link(link_1.Link(router_b, 1, host_2, 0))
 
     # start all the objects
     thread_L = []

@@ -290,10 +290,9 @@ class Router:
                             v_d = node_d
                             v = header
                     except KeyError:
-                        print("Key Error: Neighbor is likely host")
+                        continue;
+                        #print("Key Error: Neighbor is likely host")
             # new addition
-            print(v)
-            print(v_d)
             chosenVal = 999
             chosenRoute = ""
             if v not in self.cost_D:  # if v is NOT a neighbor
@@ -370,7 +369,6 @@ class Router:
         self.updateUniqueRouters()
         # run the algorithm on each router in the table
         router_count = len(self.uniqueRouters)
-        print(router_count)
         for j in range(router_count):  # for every router (row) in the network,
             # step 1: set all unknowns to infinity
             for header in self.rt_tbl_D:
@@ -403,7 +401,8 @@ class Router:
                                 updated = True
                                 self.updateUniqueRouters()
                         except KeyError:
-                            print("Key error exception occurred")
+                            continue
+                            #print("Key error exception occurred")
             if (updated):
                 # cost_D {neighbor: {interface: cost}}
                 for i in range(len(self.cost_D.values())):  # for all values
