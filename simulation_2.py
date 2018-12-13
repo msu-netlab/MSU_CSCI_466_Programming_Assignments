@@ -1,0 +1,67 @@
+import network_2
+import link_2
+import threading
+from time import sleep
+import sys
+
+# configuration parameters
+router_queue_size = 0  # 0 means unlimited
+simulation_time = 5  # give the network_2 sufficient time to execute transfers
+if __name__ == '__main__':
+    object_L = []  # keeps track of objects, so we can kill their threads at the end
+    # create network_2 hosts
+    host_1 = network_2.Host('H1')
+    object_L.append(host_1)
+    host_2 = network_2.Host('H2')
+    object_L.append(host_2)
+    # create routers and cost tables for reaching neighbors
+    cost_D = {'H1': {0: 1}, 'RB': {1: 1}}  # {neighbor: {interface: cost}}
+    router_a = network_2.Router(name='RA',
+                                cost_D=cost_D,
+                                max_queue_size=router_queue_size)
+    object_L.append(router_a)
+    cost_D = {'H2': {1: 3}, 'RA': {0: 1}}  # {neighbor: {interface: cost}}
+    router_b = network_2.Router(name='RB',
+                                cost_D=cost_D,
+                                max_queue_size=router_queue_size)
+    object_L.append(router_b)
+    # create a link_2 Layer to keep track of link_2s between network_2 nodes
+    link_layer = link_2.LinkLayer()
+    object_L.append(link_layer)
+
+    # add all the links - need to reflect the connectivity in cost_D tables above
+    link_layer.add_link(link_2.Link(host_1, 0, router_a, 0))
+    link_layer.add_link(link_2.Link(router_a, 0, host_1, 0))
+    link_layer.add_link(link_2.Link(router_a, 1, router_b, 0))
+    link_layer.add_link(link_2.Link(router_b, 1, host_2, 0))
+    link_layer.add_link(link_2.Link(router_b, 0, router_a, 1))
+    link_layer.add_link(link_2.Link(host_2, 0, router_b, 1))
+    # start all the objects
+    thread_L = []
+    for obj in object_L:
+        thread_L.append(threading.Thread(name=obj.__str__(), target=obj.run))
+    sys.stdout.write("\n")
+    for t in thread_L:
+        t.start()
+
+    # compute routing tables
+    router_a.send_routes(1)  # one update starts the routing process
+    sleep(simulation_time)  # let the tables converge
+    print("Converged routing tables")
+    # Table Header Bottom
+    for i in range(len(object_L)):
+        if str(type(object_L[i])) == "<class 'network_2.Router'>":
+            object_L[i].print_routes()
+
+    # send packet from host 1 to host 2
+    host_1.udt_send('H2', 'MESSAGE_FROM_H1')
+    host_2.udt_send('H1', 'MESSAGE FROM H2')
+    sleep(simulation_time)
+
+    # join all threads
+    for o in object_L:
+        o.stop = True
+    for t in thread_L:
+        t.join()
+
+    print("All simulation threads joined")
