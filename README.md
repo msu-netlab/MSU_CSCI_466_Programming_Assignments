@@ -1,140 +1,105 @@
-# CSCI 466 PA1 - Battleship Network Application 
+# CSCI 466 PA1 - Rock Paper Scissors Client-Server Application 
 
 ## Instructions
-### Due: 9/24/17 11:59PM
+### Due: 9/11/2020 11:59PM
 
-
-Complete the following assignment in pairs, or groups of three. 
+Complete the following assignment by yourself, or in a group of two.
 Submit your work on D2L into the "Programming Assignment 1" folder. 
-All partners will submit the same solution and we will only grade one solution for each group.
 
 
 ## Learning Objectives
 
 In this programming assignment you will:
 
-- Write a client-server application
-- Communicate using HTTP
+- Write an HTTP client-server application
 - Design a messaging standard
 
 
 ## Overview
 
-In this lab you will write a distributed implementation of the 
-[Battleship](https://en.wikipedia.org/wiki/Battleship_\(game\)) game.
-We will use the standard [10x10 variation of the game](https://en.wikipedia.org/wiki/Battleship_\(game\)#Description).
-Here is an [online implementation](http://www.battleshiponline.org/) of the Battleship game.
-*Note that the ships in that implementation have slightly different names.*
+In this programming assignment you will implement a client-server version of the [rock paper scissors](https://en.wikipedia.org/wiki/Rock_paper_scissors) game.
+Two players will throw rock, paper, or scissors by sending messages to the server.
+The server will decide which player wins a particular _play_.
+The players will then be able to query the server for the result of a play, as well as the overall score of a series of plays that comprise a _game_.
 
-Our implementation will be based on a symmetric client server architecture, where each player has both a server and a client.
-The server keeps an internal state of the game and issues replies to the other player's client.
+## Requirements
 
+You will implement a client-server implementation of the rock paper scissors game.
+Client and server programs will be implemented in Python and communicate via HTTP messages only.
+Client and server programs may run on separate machines, for example on AWS, but may also run on the same machine with their sockets bound to different ports.
 
+You will store your code in a __private__ [GitHub](https://github.com/) repository to prevent other teams from copying your code.
 
-## Board Setup
+### Client
 
-The first step before the game begins is the setup of the board, according to the [rules of the game](https://en.wikipedia.org/wiki/Battleship_\(game\)#Description).
-We will represent the board with a character array, where `_` represents water and Carrier, Battleship, cRuiser, Submarine, and Destroyer fields are represented by `C`, `B`, `R`, `S`, `D` respectively. 
-For example, your board might be set up as follows:
+The client will run on the command line with a text interface triggering its actions.
+The client will send appropriate [`HTTP` requests](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) to the server and process `HTTP` replies.
+Client actions include:
+    
+- Making a play by sending a rock, paper, or scissors message to the server.
+  Each play should have a unique identification (resource name) to differentiate it from other plays that make up a game.
+- Checking the result of a play and displaying it to the user.
+- Checking the score of a game (the number of won and lost plays) and displaying it to the user.
+  I suggest that you also treat a game as a resource, but I leave it to you to design how to do that.
+- Resetting a game. 
+    
+### Server
 
-```
-CCCCC_____
-BBBB______
-RRR_______
-SSS_______
-D_________
-D_________
-__________
-__________
-__________
-__________
-```
-
-You will save your board as `own_board.txt`.
-
-### Messages
-
-To play the game, your implementation needs to exchange two types of messages - `fire` and `result`.
-The `fire` message needs to communicate the grid location of salvo.
-The `result` message needs to communicate whether the salvo was a hit, a sink, or a miss.
-
-The `fire` message will be represented as an `HTTP POST`.
-The content of the fire message will include the targeted coordinates as a [URL formatted string for Web forms](\href{https://en.wikipedia.org/wiki/Query_string#Web_forms), for example 5 and 7, as: `x=5&y=7`.
-Assume that coordinates are 0-indexed.
-So, assuming that your opponent's server runs at `111.222.333.444:5555`, the `fire` message is a `POST` request sent to `http://111.222.333.444:5555?x=5&y=7`.
-
-The `result` message will be formatted as an HTTP response.
-For a correctly formatted `fire` request your reply will be an `HTTP OK` message with `hit=` followed by `1` (hit), or `0` (miss).
-If the hit results in a sink, then the response will also include `sink=` followed by a letter code (`C`, `B`, `R`, `S`, `D`) of the sunk ship.
-An example of such a reply is `hit=1\&sink=D`.
-
-If the fire message includes coordinates that are out of bounds, the response will be `HTTP Not Found`.
-If the fire message includes coordinates that have been already fired opon, the response will be `HTTP Gone`.
-Finally, if the fire message is not formatted correctly, the response will be `HTTP Bad Request`.
-For your reference here's a [link](\href{https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to the different HTTP response status codes.
+The server will run on the command line and may produce diagnostic output, which however will not be accessible to users.
+The server will accept `HTTP` messages from the client and respond with appropriate [`HTTP` status codes.](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#:~:text=final%20HTTP%20message.-,2xx%20Success,received%2C%20understood%2C%20and%20accepted.&text=Standard%20response%20for%20successful%20HTTP,on%20the%20request%20method%20used.)
+Server actions include:
+    
+- Accepting a play message. 
+A player should not be able to make two different throws for the same play.
+- Accepting a query for a play result and replying with the result for the specified play.
+- Accepting a query for game score and replying with the score for the specified game.
+- Accepting a game reset message and deleting plays that make up the game. 
+A game should be reset only if both players request a reset.
+Recall that HTTP servers do not keep any information in memory between requests, so you will need to use another method to keep track of the number of reset requests and who sent them.
 
 
 ### Program Invocation
 
-Your server process should accept a port parameter, on which a client can connect, and the file containing the setup of your board, eg. 
+Your server process should accept a port parameter, on which a clients can connect.
 
-`python server.py 5000 own_board.txt`.
+`python server.py 5000`
 
-Your client process should accept the IP address, the port of the server process, and the X and Y coordinates onto which to fire, eg. 
+Your client process should accept the IP address and the port of the server process.
 
-`python client.py 128.111.52.245 5000 5 7`.
-
-The client will be invoked multiple times during the game. 
-
-
-### Internal State Representation
-Following each `fire` message the server should update the state of the player's `own_board.txt` (whether a player's ship has been hit and where).
-Following each `result` message the client should update the record of the player's shots onto the opponent's board, represented internally as `opponent_board.txt`.
-A player should be able able to visually inspect their own board and their record of opponent's board on `http://localhost:5000/own_board.html` and `http://localhost:5000/opponent_board.html` respectively.
-It is up to you how you visually represent the state of each board.
+`python client.py 128.111.52.245 5000`
 
 
 ## BONUS
 
-I will award __one bonus point__ for each of the following:  
-
-* The group with the most visually appealing representation of game boards.
-
-* Any group that eliminates the need for client.py in favor of using a browser client. 
-  *Hint: Think about how to update files by replacing them*
-
-* Any group that implements the Version 1 rules of the [Battleship: Advanced Missions](https://en.wikipedia.org/wiki/Electronic_Battleship:_Advanced_Mission) variant of the game.
-
+I will award __one bonus point__ for the group that implements the most visually appealing user experience. 
+To do so you may rely on Python GUI packages, or implement the client in a browser using JavaScript.
 
 
 ## What to Submit
 
-* \[2 points\] Find a partner.
-Submit `partners.txt` with your partner's, or partners' first and last name.
+* \[1 point\] Submit a `partner.txt` file.
+If you're working with a partner, `partner.txt` should include the name of your partner.
+If you're working by yourself, `partner.txt` should include the word "solo."
 
-* \[20 points\] `server.py` and `client.py` -- your working Python implementation of your server process. 
-A YouTube video link showing the execution of your program.
-Videos must be under 5 minutes in length - videos longer than that will not be graded.
+* \[1 point\] Submit a `contributors.png` file.
+The file should be a screenshot of the `contributors` page for your github repo, for example [https://github.com/msu-netlab/MSU_CSCI_466_Programming_Assignments/graphs/contributors] for the programming assignment repository. 
+We will consult this screenshot and adjust partner grades in case there are discrepancies in effort.
 
-* \[1 points\] (BONUS) `bonus1.png` -- a screenshot of the browser showing the visual representation of your board.
-
-* \[1 points\] (BONUS) `bonus2.js` -- your working implementation of a browser client.
-A YouTube video link showing the execution of your program.
-
-* \[1 points\] (BONUS) `client_am.py` and `server_am.py` -- implementing the Advanced Missions rules of the Battleship game.
-A YouTube video link showing the execution of your program.
-
-
-## Grading Rubric
-
-I will grade your submissions of the basic Battleship program from the YouTube video as follows:
-
-* \[2 points\] `server.py` shows the initial representation of player's own board
-* \[2 points\] `server.py` shows the initial representation of opponent's board
-* \[3 points\] `client.py` sends a correctly formatted `fire` message (may be shown in Wireshark)
-* \[5 points\] `server.py` correctly processes the `fire` message to update `own_board.txt`. Make sure to show all possible cases.
-* \[3 points\] `server.py` sends a correctly formatted `response` message (may be shown in Wireshark)
-* \[5 points\] `client.py` correctly processes the `result` message to update `opponent_board.txt`. Make sure to show all possible cases.
-
-
+* \[18 points\] Submit a zip archive of your code and a link to a YouTube video showing the execution of your program.
+Make sure your videos are under 5 minutes long - __we will only watch the first five minutes of your video__.
+We will award points for your implementation as follows, so make sure your video shows the appropriate functionality.
+    
+    * \[2 points\] Client sends an appropriate `HTTP` message to issue a play throw and processes an appropriate `HTTP` status code in the reply. 
+    * \[2 points\] Client sends an appropriate `HTTP` message to check play result and displays the result to the user based on information in the `HTTP` reply.
+    * \[1 point\] Server correctly computes results based on submitted throws.
+    * \[3 point\] Server does not accept duplicate throws by players for the same play. Duplicate throws are rejected by the server via an appropriate `HTTP` status code in the reply. Based on the server reply the client notifies the user that the issued throw was a duplicate.
+    * \[2 point\] Client sends an appropriate `HTTP` message to check play result and displays the result to user based on information included in the `HTTP` reply from the server.
+    * \[2 point\] Client sends an appropriate `HTTP` message to check game score and displays the score to user based on information included in the `HTTP` reply from the server.
+    * \[1 point\]  Client and server communicate only via `HTTP` messages. 
+    * \[1 point\] Server does not keep any in-memory state, but uses on-disk resources to maintain rock paper scissors game state.
+    * \[2 point\]  Client sends an appropriate `HTTP` message to reset a game. The server resets the game only if both clients request a reset.
+    * \[1 point\]  Server notifies clients that a game has been reset using an appropriate `HTTP` reply.
+    * \[1 point\]  Server does not use memory to keep track of reset requests.
+    
+    
 
