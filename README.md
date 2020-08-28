@@ -26,11 +26,6 @@ In this programming assignment you will implement a client-server version of the
 Two players will throw rock, paper, or scissors by sending messages to the server.
 The server will decide which player wins a particular *play*.
 The players will then be able to query the server for the result of a play, as well as the overall score of a series of plays that comprise a *game*, for example best two plays out of three.
-<<<<<<< HEAD
-
-=======
->>>>>>> rock-paper-scissors
-
 
 
 ## Requirements
