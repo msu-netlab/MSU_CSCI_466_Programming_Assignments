@@ -100,13 +100,12 @@ We will award points for your implementation as follows, so make sure your video
     * \[2 points\] Client sends an appropriate `HTTP` message to issue a play throw and processes an appropriate `HTTP` status code in the reply. 
     * \[2 points\] Client sends an appropriate `HTTP` message to check play result and displays the result to the user based on information in the `HTTP` reply.
     * \[1 point\] Server correctly computes results based on submitted throws.
-    * \[3 point\] Server does not accept duplicate throws by players for the same play. Duplicate throws are rejected by the server via an appropriate `HTTP` status code in the reply. Based on the server reply the client notifies the user that the issued throw was a duplicate.
-    * \[2 point\] Client sends an appropriate `HTTP` message to check play result and displays the result to user based on information included in the `HTTP` reply from the server.
-    * \[2 point\] Client sends an appropriate `HTTP` message to check game score and displays the score to user based on information included in the `HTTP` reply from the server.
+    * \[3 points\] Server does not accept duplicate throws by players for the same play. Duplicate throws are rejected by the server via an appropriate `HTTP` status code in the reply. Based on the server reply the client notifies the user that the issued throw was a duplicate.
+    * \[2 points\] Client sends an appropriate `HTTP` message to check game score and displays the score to user based on information included in the `HTTP` reply from the server.
     * \[1 point\]  Client and server communicate only via `HTTP` messages. 
-    * \[1 point\] Server does not keep any in-memory state, but uses on-disk resources to maintain rock paper scissors game state.
-    * \[2 point\]  Client sends an appropriate `HTTP` message to reset a game. The server resets the game only if both clients request a reset.
-    * \[1 point\]  Server notifies clients that a game has been reset using an appropriate `HTTP` reply.
+    * \[2 points\] Server does not keep any in-memory state, but uses on-disk resources to maintain rock paper scissors game state.
+    * \[2 points\]  Client sends an appropriate `HTTP` message to reset a game. The server resets the game only if both clients request a reset.
+    * \[2 points\]  Server notifies clients that a game has been reset using an appropriate `HTTP` reply.
     * \[1 point\]  Server does not use memory to keep track of reset requests.
     
     
