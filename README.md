@@ -22,8 +22,8 @@ In this programming assignment you will implement a client-server version of the
 <img src="https://inteng-storage.s3.amazonaws.com/images/uploads/sizes/RPS_resize_md.jpg" alt="Rock Paper Scissors game" width="300">
 </p>
 Two players will throw rock, paper, or scissors by sending messages to the server.
-The server will decide which player wins a particular _play_.
-The players will then be able to query the server for the result of a play, as well as the overall score of a series of plays that comprise a _game_, for example best two plays out of three.
+The server will decide which player wins a particular *play*.
+The players will then be able to query the server for the result of a play, as well as the overall score of a series of plays that comprise a *game*, for example best two plays out of three.
 
 
 
