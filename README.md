@@ -1,7 +1,6 @@
 # CSCI 466 PA1 - Rock Paper Scissors Client-Server Application 
 
 ## Instructions
-### Due: 9/11/2020 11:59PM
 
 Complete the following assignment by yourself, or in a group of two.
 Submit your work on D2L into the "Programming Assignment 1" folder. 
