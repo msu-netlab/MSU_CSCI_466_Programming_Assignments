@@ -19,9 +19,9 @@ In this programming assignment you will:
 
 In this programming assignment you will implement a client-server version of the [rock paper scissors](https://en.wikipedia.org/wiki/Rock_paper_scissors) game.
 
-<div style="text-align:center">
+<p align="center">
 <img src="https://inteng-storage.s3.amazonaws.com/images/uploads/sizes/RPS_resize_md.jpg" alt="Rock Paper Scissors game" width="300">
-</div>
+</p>
 
 Two players will throw rock, paper, or scissors by sending messages to the server.
 The server will decide which player wins a particular *play*.
