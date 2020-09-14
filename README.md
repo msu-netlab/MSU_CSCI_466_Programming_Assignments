@@ -89,9 +89,11 @@ To do so you may depart from the text interface requirement and use Python GUI p
 If you're working with a partner, `partner.txt` should include the name of your partner.
 If you're working by yourself, `partner.txt` should include the word "solo".
 
-* \[1 point\] Submit a `contributors.png` file.
-The file should be a screenshot of the `contributors` page for your github repo, for example [https://github.com/msu-netlab/MSU_CSCI_466_Programming_Assignments/graphs/contributors] for the programming assignment repository. 
-I will consult this screenshot and adjust partner grades in case there are discrepancies in effort.
+* \[1 point\] Submit a `contributors.txt` created by running the following command inside your git repository:
+
+        git log --pretty=format:"%h %an %ad - %s" --shortstat --date=short > contributors.txt
+
+    I will consult this file and adjust partner grades in case there are discrepancies in effort.
 
 * \[18 points\] Submit a zip archive of your code and a link to a YouTube video showing the execution of your program.
 Make sure your videos are under 5 minutes long - __we will only watch the first five minutes of your video__.
