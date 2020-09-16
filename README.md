@@ -2,9 +2,8 @@
 
 ## Instructions
 
-Complete the following assignment in pairs, or groups of three. 
-Submit your work on D2L into the "Programming Assignment&nbsp;2" folder before its due date. 
-All partners will submit the same solution and we will only grade one solution for each group.
+Complete the following assignment by yourself, or in a group of two.
+Submit your work on D2L into the "Programming Assignment 2" folder. 
 
 
 ## Learning Objectives
@@ -31,7 +30,7 @@ TRANSPORT LAYER (rdt.py)
 NETWORK LAYER (network.py)
 ```
 
-The client sends messages to the server, which converts them to pig latin and transmits them back.
+The client sends messages to the server, which converts them to [pig latin](https://en.wikipedia.org/wiki/Pig_Latin) and transmits them back.
 The client and the server send messages to each other through the transport layer provided by an RDT implementation using the `rdt_1_0_send` and `rdt_1_0_receive` functions.
 The starting `rdt.py` provides only the RDT 1.0 version of the protocol, which does not tolerate packet corruption, or loss.
 The RDT protocol uses `udt_send` and `udt_receive` provided by `network.py` to transfer bytes between the client and server machines.
@@ -59,7 +58,7 @@ python client.py localhost 5000
 ```
 
 in separate terminal windows. 
-Be sure to start the server first, to allow it to start listening on a socket, and start the client soon after, before the server times out.
+Be sure to start the server first, to allow it to start listening on a socket used by `network.py`, and start the client soon after, before the server times out.
 
 
 ## BONUS 
@@ -88,9 +87,18 @@ Videos longer than 5 minutes will not be graded.
 
 We will grade the assignment as follows:
 
-* \[2 points\] `partners.txt` with your partner's first and last name.
+* \[1 point\] Submit a `partner.txt` file.
+If you're working with a partner, `partner.txt` should include the name of your partner.
+If you're working by yourself, `partner.txt` should include the word "solo".
+
+* \[1 point\] Submit a `contributors.txt` created by running the following command inside your git repository:
+
+        git log --pretty=format:"%h %an %ad - %s" --shortstat --date=short > contributors.txt
+
+    I will consult this file and adjust partner grades in case there are discrepancies in effort.
 
 * \[10 points\] `rdt_2_1.py`, `client_2_1.py`, `server_2_1.py`, `network_2_1.py` that correctly implement RDT&nbsp;2.1 and a link to a YouTube video showing the execution of your program.
+Make sure your videos are under 5 minutes long - __we will only watch the first five minutes of your video__.
 
   * \[2 points\] RDT&nbsp;2.1 delivers data under no corruption in the network
 
@@ -103,6 +111,7 @@ We will grade the assignment as follows:
   * \[2 points\] RDT&nbsp;2.1 resends data following a NAK
 
 * \[13 points\] `rdt_3_0.py`, `client_3_0.py`, `server_3_0.py`, `network_3_0.py` that correctly implement RDT&nbsp;3.0 and a link to a YouTube video showing the execution of your program.
+Make sure your videos are under 5 minutes long - __we will only watch the first five minutes of your video__.
 
   * \[2 points\] RDT&nbsp;3.0 delivers data under no corruption or loss in the network and uses a modified Packet class to send ACKs
   
@@ -124,7 +133,7 @@ We will grade the assignment as follows:
 
 ## Acknowledgements
 
-This project was adapted from Kishore Ramachandran version of this assignment.
+This project was adapted from [Kishore Ramachandran version of this assignment](https://www.cc.gatech.edu/~rama/CS2200-External/projects/p5/prj5.html).
 
 
 
