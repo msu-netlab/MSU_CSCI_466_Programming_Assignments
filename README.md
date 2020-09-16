@@ -25,7 +25,7 @@ During this project, you will implement the Reliable Data Transmission protocols
 The starting code for this project provides you with the implementation of several network layers that cooperate to achieve end-to-end communication.
 
 <p align="center">
-<img src="images/network.png" alt="Network stack and layer interface calls" width="800">
+<img src="images/network.png" alt="Network stack and layer interface calls" width="600">
 </p>
 
 The client sends messages to the server, which converts them to [pig latin](https://en.wikipedia.org/wiki/Pig_Latin) and transmits them back.
