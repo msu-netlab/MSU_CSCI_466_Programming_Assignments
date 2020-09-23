@@ -4,6 +4,7 @@
 
 Complete the following assignment by yourself, or in a group of two.
 Submit your work on D2L into the "Programming Assignment 2" folder. 
+Please have only one member of the group submit.
 
 
 ## Learning Objectives
@@ -79,6 +80,8 @@ RDT&nbsp;3.0 tolerates corrupted and lost packets through retransmission.
 The necessary functions prototypes are already included in `rdt.py`.
 For the purposes of testing you may modify `client.py` and `server.py` to use these functions instead of those of RDT&nbsp;1.0.
 You will also submit a link to a YouTube video showing an execution of your code for each version of the protocol.
+Please make sure to include the link to your YouTube videos not in a text file, but through the D2L submission form.
+Also, please make sure that your YouTube videos are voiced over and point out that your code does the different things that the grading rubric asks for. 
 Videos longer than 5 minutes will not be graded.
 
 ## Grading Rubric
