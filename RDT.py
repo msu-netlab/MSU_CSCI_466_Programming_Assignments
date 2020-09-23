@@ -40,10 +40,10 @@ class Packet:
 	def corrupt(byte_S):
 		# extract the fields
 		length_S = byte_S[0:Packet.length_S_length]
-		seq_num_S = byte_S[Packet.length_S_length: Packet.seq_num_S_length + Packet.seq_num_S_length]
+		seq_num_S = byte_S[Packet.length_S_length: Packet.length_S_length + Packet.seq_num_S_length]
 		checksum_S = byte_S[
-		             Packet.seq_num_S_length + Packet.seq_num_S_length: Packet.seq_num_S_length + Packet.length_S_length + Packet.checksum_length]
-		msg_S = byte_S[Packet.seq_num_S_length + Packet.seq_num_S_length + Packet.checksum_length:]
+		             Packet.length_S_length + Packet.seq_num_S_length: Packet.length_S_length + Packet.seq_num_S_length + Packet.checksum_length]
+		msg_S = byte_S[Packet.length_S_length + Packet.seq_num_S_length + Packet.checksum_length:]
 		
 		# compute the checksum locally
 		checksum = hashlib.md5(str(length_S + seq_num_S + msg_S).encode('utf-8'))
