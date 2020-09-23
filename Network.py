@@ -5,7 +5,6 @@ from time import sleep
 import random
 import RDT
 
-
 ## Provides an abstraction for the network layer
 class NetworkLayer:
 	# configuration parameters
@@ -59,11 +58,11 @@ class NetworkLayer:
 		# corrupt a packet
 		if random.random() < self.prob_byte_corr:
 			start = random.randint(RDT.Packet.length_S_length,
-			                       len(msg_S) - 10)  # make sure we are not corrupting the length field,
+			                       len(msg_S) - RDT.Packet.length_S_length)  # make sure we are not corrupting the length field,
 			# since that makes life really difficult
 			num = random.randint(1, 5)
 			repl_S = ''.join(random.sample('XXXXX', num))  # sample length >= num
-			msg_S = msg_S[:start] + repl_S + msg_S[start + num:]
+			msg_S = msg_S[:start] + repl_S + msg_S[min(start + num, len(msg_S)-1):]
 		# reorder packets - either hold a packet back, or if one held back then send both
 		if random.random() < self.prob_pkt_reorder or self.reorder_msg_S:
 			if self.reorder_msg_S is None:
