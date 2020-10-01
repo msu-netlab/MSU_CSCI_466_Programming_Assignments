@@ -42,6 +42,22 @@ You may need to modify/extend the `Packet` class to transmit the necessary infor
 The provided implementation of `network.py` is reliable, but we will test your code with non-zero probability for packet corruption and loss by changing the values of `prob_pkt_loss` and `prob_byte_corr` of the `NetworkLayer` class.
 You should change those variables yourself to test your code and show that your protocol implementations tolerate corruption and loss in your demonstration videos.
 
+Note that unlike full-fledged TCP, RDT is a unidirectional protocol with data transferring from the sender to the receiver, but not in both directions.
+To communicate in both directions the client and server execute separate RDT send and receive state machines as described in Section 3.4.1 of your textbook.
+However, due to the unidirectional capabilities of RDT, the connection between client RDT send and server RDT receive needs its own UDT channel.
+Similarly a separate UDT channel is needed between server RDT send and client RDT receive.
+To deal with this limitation the RDT class sets up two `network` connection.
+`net_snd.udt_send` and `net_snd.udt_receive` functions should be used in `RDT.send`, while `net_rcv.udt_send` and `net_rcv.udt_receive` in `RDT.receive`.
+
+Finally, the `RDT.send` function for the client and server is blocking and may return when the sent data has been confirmed with an ACK by the receiver. 
+The `RDT.receive` function however, does not confirm if the ACK it sends to the sender has been received. 
+As a result, the receive function returns, while the sender may still need the ACK to be retransmitted. 
+
+The easiest way to allow `RDT.receive` to return while providing ACK retransmission for the sender is to set up a `receive_helper` function that continually runs in a thread to execute the RDT receive finite state machine. 
+That way the receive function simply pulls data from a buffer that is fed by `RDT.receive_helper`.
+If you are looking for help with setting up threads in Python, look at how it is already implemented in `Network.py` for the `collect` function.
+
+
 ### Program Invocation
 
 To run the starting code you may run:
