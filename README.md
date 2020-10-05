@@ -132,13 +132,14 @@ Make sure your videos are under 5 minutes long - __we will only watch the first 
 
   * \[2 points\] RDT&nbsp;3.0 delivers data under no corruption or loss in the network and uses a modified Packet class to send ACKs
   
-  * \[2 points\] RDT&nbsp;3.0 does not deliver corrupt packets and uses modified Packet class to send NAKs
+  * \[2 points\] RDT&nbsp;3.0 does not deliver corrupt packets 
+  #and uses modified Packet class to send NAKs
   
-  * \[2 points\] RDT&nbsp;3.0 resends data following a NAK
+ # * \[2 points\] RDT&nbsp;3.0 resends data following a NAK
   
-  * \[2 points\] RDT&nbsp;3.0 retransmits a lost packet after a timeout
+  * \[3 points\] RDT&nbsp;3.0 retransmits a lost packet after a timeout
   
-  * \[2 points\] RDT&nbsp;3.0 retransmits a packet after a lost ACK
+  * \[3 points\] RDT&nbsp;3.0 retransmits a packet after a lost ACK
   
   * \[3 points\] RDT&nbsp;3.0 ignores a duplicate packet after a premature timeout (or after a lost ACK)
 
