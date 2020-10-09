@@ -6,6 +6,8 @@ Created on Oct 12, 2016
 
 import queue
 import threading
+from rprint import print
+
 
 ## An abstraction of a link between router interfaces
 class Link:
@@ -16,16 +18,13 @@ class Link:
     # @param to_node: node to which data will be transfered
     # @param to_intf_num: number of the interface on that node
     # @param mtu: link maximum transmission unit
-    def __init__(self, from_node, from_intf_num, to_node, to_intf_num, mtu):
+    def __init__(self, from_node, from_intf_num, to_node, to_intf_num):
         self.from_node = from_node
         self.from_intf_num = from_intf_num
         self.to_node = to_node
         self.to_intf_num = to_intf_num
         self.in_intf = from_node.out_intf_L[from_intf_num]
         self.out_intf = to_node.in_intf_L[to_intf_num]
-        #configure the linking interface MTUs
-        self.in_intf.mtu = mtu
-        self.out_intf.mtu = mtu
         
         
     ## called when printing the object
@@ -36,10 +35,10 @@ class Link:
     def tx_pkt(self):
         pkt_S = self.in_intf.get()
         if pkt_S is None:
-            return #return if no packet to transfer
+            return # return if no packet to transfer
         if len(pkt_S) > self.out_intf.mtu:
             print('%s: packet "%s" length greater then link mtu (%d)' % (self, pkt_S, self.out_intf.mtu))
-            return #return without transmitting if packet too big
+            return # return without transmitting if packet too big
         # otherwise transmit the packet
         try:
             self.out_intf.put(pkt_S)

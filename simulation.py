@@ -3,10 +3,13 @@ Created on Oct 12, 2016
 
 @author: mwittie
 '''
+
 import network
 import link
 import threading
 from time import sleep
+from rprint import print
+
 
 ## configuration parameters
 router_queue_size = 0  # 0 means unlimited
@@ -20,7 +23,7 @@ if __name__ == '__main__':
 	object_L.append(client)
 	server = network.Host(2)
 	object_L.append(server)
-	router_a = network.Router(name='A', intf_count=1, max_queue_size=router_queue_size)
+	router_a = network.Router(name='A', intf_count=1, max_queue_size=router_queue_size, mtu=50)
 	object_L.append(router_a)
 	
 	# create a Link Layer to keep track of links between network nodes
@@ -29,8 +32,8 @@ if __name__ == '__main__':
 	
 	# add all the links
 	# link parameters: from_node, from_intf_num, to_node, to_intf_num, mtu
-	link_layer.add_link(link.Link(client, 0, router_a, 0, 50))
-	link_layer.add_link(link.Link(router_a, 0, server, 0, 50))
+	link_layer.add_link(link.Link(client, 0, router_a, 0))
+	link_layer.add_link(link.Link(router_a, 0, server, 0))
 	
 	# start all the objects
 	thread_L = [threading.Thread(name=object.__str__(), target=object.run) for object in object_L]

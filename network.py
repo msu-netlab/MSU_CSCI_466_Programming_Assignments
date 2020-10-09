@@ -5,14 +5,16 @@ Created on Oct 12, 2016
 '''
 import queue
 import threading
+from rprint import print
 
 
 ## wrapper class for a queue of packets
 class Interface:
-	## @param maxsize - the maximum size of the queue storing packets
-	def __init__(self, maxsize=0):
-		self.queue = queue.Queue(maxsize);
-		self.mtu = None
+	## @param max_queue_size - the maximum size of the queue storing packets
+	#  @param mtu - the maximum transmission unit on this interface
+	def __init__(self, max_queue_size=0, mtu=50):
+		self.queue = queue.Queue(max_queue_size);
+		self.mtu = mtu
 	
 	## get packet from the queue interface
 	def get(self):
@@ -107,12 +109,12 @@ class Router:
 	##@param name: friendly router name for debugging
 	# @param intf_count: the number of input and output interfaces
 	# @param max_queue_size: max queue length (passed to Interface)
-	def __init__(self, name, intf_count, max_queue_size):
+	def __init__(self, name, intf_count, max_queue_size, mtu):
 		self.stop = False  # for thread termination
 		self.name = name
 		# create a list of interfaces
-		self.in_intf_L = [Interface(max_queue_size) for _ in range(intf_count)]
-		self.out_intf_L = [Interface(max_queue_size) for _ in range(intf_count)]
+		self.in_intf_L = [Interface(max_queue_size, mtu) for _ in range(intf_count)]
+		self.out_intf_L = [Interface(max_queue_size, mtu) for _ in range(intf_count)]
 	
 	## called when printing the object
 	def __str__(self):
