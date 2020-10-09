@@ -32,7 +32,7 @@ class Link:
     def __str__(self):
         return 'Link %s-%d to %s-%d' % (self.from_node, self.from_intf_num, self.to_node, self.to_intf_num)
         
-    ##transmit a packet from the 'from' to the 'to' interface
+    ## transmit a packet from the 'from' to the 'to' interface
     def tx_pkt(self):
         pkt_S = self.in_intf.get()
         if pkt_S is None:
@@ -40,7 +40,7 @@ class Link:
         if len(pkt_S) > self.out_intf.mtu:
             print('%s: packet "%s" length greater then link mtu (%d)' % (self, pkt_S, self.out_intf.mtu))
             return #return without transmitting if packet too big
-        #otherwise transmit the packet
+        # otherwise transmit the packet
         try:
             self.out_intf.put(pkt_S)
             print('%s: transmitting packet "%s"' % (self, pkt_S))
@@ -56,12 +56,16 @@ class LinkLayer:
         ## list of links in the network
         self.link_L = []
         self.stop = False #for thread termination
+       
+    ## Return a name of the network layer
+    def __str__(self):
+        return "Network"
     
-    ##add a Link to the network
+    ## add a Link to the network
     def add_link(self, link):
         self.link_L.append(link)
         
-    ##transfer a packet across all links
+    ## transfer a packet across all links
     def transfer(self):
         for link in self.link_L:
             link.tx_pkt()
@@ -76,4 +80,3 @@ class LinkLayer:
             if self.stop:
                 print (threading.currentThread().getName() + ': Ending')
                 return
-    

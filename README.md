@@ -40,8 +40,7 @@ At a high level a network defined in `simulation.py` includes hosts, routers and
 `Hosts` generate and receive traffic.
 `Routers` forward traffic from one `Interface` to another based on routing tables that you will implement.
 `Links` connect network interfaces of routers and hosts.
-Finally, the `LinkLayer` forwards traffic along links.
-Please consult the [video lecture](https://youtu.be/-JXvrxjPo7o) for a more in-depth explanation of the code.
+Finally, the `LinkLayer` runs a thread to forward traffic along links.
 
 ### Program Invocation
 
@@ -52,7 +51,7 @@ python simulation.py
 ```
 
 The current `simulation_time` in `simulation.py` is one second.
-As the network becomes more complex and takes longer to execute, you may need to extend the simulation to allow all the packets to be transfered. 
+As the network becomes more complex and takes longer to execute, you may need to extend the simulation to allow the time for all the packets to transfer. 
 
 
 ## Grading Rubric
@@ -61,7 +60,7 @@ Your task is to extend the given code to implement several data link router func
 
 * \[2 points\] Currently `simulation.py` is configured to send three very short messages.
   Instead, generate a message for `Host_2` that's at least 80 characters long.
-  You will notice that this messages is to large for the link MTUs.
+  You will notice that this messages is to large for the interface MTUs.
   Your first task is to break this message up into two separate packets.
 
   Implement your solution in files `link_1.py`, `network_1.py`, and `simulation_1.py`.
