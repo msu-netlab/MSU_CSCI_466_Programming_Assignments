@@ -67,10 +67,11 @@ class NetworkPacket:
 class Host:
 	
 	##@param addr: address of this node represented as an integer
-	def __init__(self, addr):
+	# @param mtu: MTU for all interfaces
+	def __init__(self, addr, mtu=50):
 		self.addr = addr
-		self.in_intf_L = [Interface()]
-		self.out_intf_L = [Interface()]
+		self.in_intf_L = [Interface(mtu=mtu)]
+		self.out_intf_L = [Interface(mtu=mtu)]
 		self.stop = False  # for thread termination
 	
 	## called when printing the object
@@ -82,9 +83,9 @@ class Host:
 	# @param data_S: data being transmitted to the network layer
 	def udt_send(self, dst_addr, data_S):
 		p = NetworkPacket(dst_addr, data_S)
-		self.out_intf_L[0].put(p.to_byte_S())  # send packets always enqueued successfully
 		print('%s: sending packet "%s" on the out interface with mtu=%d' % (self, p, self.out_intf_L[0].mtu))
-	
+		self.out_intf_L[0].put(p.to_byte_S())  # send packets always enqueued successfully
+
 	## receive packet from the network layer
 	def udt_receive(self):
 		pkt_S = self.in_intf_L[0].get()
@@ -109,7 +110,8 @@ class Router:
 	##@param name: friendly router name for debugging
 	# @param intf_count: the number of input and output interfaces
 	# @param max_queue_size: max queue length (passed to Interface)
-	def __init__(self, name, intf_count, max_queue_size, mtu):
+	# @param mtu: MTU for all interfaces
+	def __init__(self, name, intf_count, max_queue_size, mtu=50):
 		self.stop = False  # for thread termination
 		self.name = name
 		# create a list of interfaces
@@ -134,9 +136,9 @@ class Router:
 					# HERE you will need to implement a lookup into the
 					# forwarding table to find the appropriate outgoing interface
 					# for now we assume the outgoing interface is also i
-					self.out_intf_L[i].put(p.to_byte_S(), True)
 					print('%s: forwarding packet "%s" from interface %d to %d with mtu %d' \
 					      % (self, p, i, i, self.out_intf_L[i].mtu))
+					self.out_intf_L[i].put(p.to_byte_S(), True)
 			except queue.Full:
 				print('%s: packet "%s" lost on interface %d' % (self, p, i))
 				pass

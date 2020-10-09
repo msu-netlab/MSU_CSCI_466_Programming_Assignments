@@ -60,14 +60,14 @@ Your task is to extend the given code to implement several data link router func
 
 * \[2 points\] Currently `simulation.py` is configured to send three very short messages.
   Instead, generate a message for `Host_2` that's at least 80 characters long.
-  You will notice that this messages is to large for the interface MTUs.
+  You will notice that this messages is too large for the interface MTUs.
   Your first task is to break this message up into two separate packets.
 
   Implement your solution in files `link_1.py`, `network_1.py`, and `simulation_1.py`.
 
 
-* \[10 points\] The packets you created are small enough to pass over the links. 
-  However, if we change the MTU of the second link (between `Router_A` and `Host_2`) to 30, the packets will now need to be segmented.
+* \[10 points\] The packets you created are small enough to transmit over the client's interface. 
+  However, if we change the MTU of the router interfaces to 30, the packets will now need to be segmented.
 
   Your task is to extend the network layer to support segmentation.
   Study lecture notes and the book on how IP implements segmentation.
