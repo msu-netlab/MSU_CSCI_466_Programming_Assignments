@@ -2,9 +2,9 @@
 
 ## Instructions
 
-Complete the following assignment in pairs.
-Submit your work on D2L into the "Programming Assignment&nbsp;3" folder before its due date. 
-All partners will submit the same solution and we will only grade one solution for each group.
+Complete the following assignment by yourself, or in a group of two. 
+Submit your work on D2L into the "Programming Assignment 3" folder. 
+Please have only one member of the group submit.
 
 
 ## Learning Objectives
