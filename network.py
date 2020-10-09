@@ -138,7 +138,7 @@ class Router:
 					# for now we assume the outgoing interface is also i
 					print('%s: forwarding packet "%s" from interface %d to %d with mtu %d' \
 					      % (self, p, i, i, self.out_intf_L[i].mtu))
-					self.out_intf_L[i].put(p.to_byte_S(), True)
+					self.out_intf_L[i].put(p.to_byte_S())
 			except queue.Full:
 				print('%s: packet "%s" lost on interface %d' % (self, p, i))
 				pass
