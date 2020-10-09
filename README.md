@@ -85,12 +85,12 @@ Your task is to extend the given code to implement several data link router func
   ![network_2](https://github.com/msu-netlab/MSU_CSCI_466_PAs/blob/data_plane/images/network.png)
 
   Second, create routing tables so that both Host 1 and Host 2 can send packets to Host 3 and Host 4 respectively.
-  The routing table for each router should be passed into the `Router` constructor, and so should be defined in `simulation.py`.
-  The format of these is up to you.
+  The routing table for each router should be passed into the `Router` constructor, and so it should be defined in `simulation.py`.
+  The format of these tables is up to you.
   You will also need to modify the `Router` class to forward the packets correctly between interfaces according to your routing tables.
 
-Finally, third, configure the routing tables to forward packets from Host 1 through Router B and from Host 2 through Router C.
-You may extend `NetworkPacket` with a source address, but it is not necessary to forward a packet onto different paths.
+  Finally, third, configure the routing tables to forward packets from Host 1 through Router B and from Host 2 through Router C.
+  You may extend `NetworkPacket` with a source address, if you find that useful.
 
   Implement your solution in files `link_3.py`, `network_3.py`, and `simulation_3.py`.
 
