@@ -12,9 +12,9 @@ from rprint import print
 class Interface:
 	## @param max_queue_size - the maximum size of the queue storing packets
 	#  @param mtu - the maximum transmission unit on this interface
-	def __init__(self, max_queue_size=0, mtu=50):
+	def __init__(self, max_queue_size=0):
 		self.queue = queue.Queue(max_queue_size);
-		self.mtu = mtu
+		self.mtu = 1
 	
 	## get packet from the queue interface
 	def get(self):
@@ -67,11 +67,10 @@ class NetworkPacket:
 class Host:
 	
 	##@param addr: address of this node represented as an integer
-	# @param mtu: MTU for all interfaces
-	def __init__(self, addr, mtu=50):
+	def __init__(self, addr):
 		self.addr = addr
-		self.in_intf_L = [Interface(mtu=mtu)]
-		self.out_intf_L = [Interface(mtu=mtu)]
+		self.in_intf_L = [Interface()]
+		self.out_intf_L = [Interface()]
 		self.stop = False  # for thread termination
 	
 	## called when printing the object
@@ -110,13 +109,12 @@ class Router:
 	##@param name: friendly router name for debugging
 	# @param intf_count: the number of input and output interfaces
 	# @param max_queue_size: max queue length (passed to Interface)
-	# @param mtu: MTU for all interfaces
-	def __init__(self, name, intf_count, max_queue_size, mtu=50):
+	def __init__(self, name, intf_count, max_queue_size):
 		self.stop = False  # for thread termination
 		self.name = name
 		# create a list of interfaces
-		self.in_intf_L = [Interface(max_queue_size, mtu) for _ in range(intf_count)]
-		self.out_intf_L = [Interface(max_queue_size, mtu) for _ in range(intf_count)]
+		self.in_intf_L = [Interface(max_queue_size) for _ in range(intf_count)]
+		self.out_intf_L = [Interface(max_queue_size) for _ in range(intf_count)]
 	
 	## called when printing the object
 	def __str__(self):

@@ -67,7 +67,7 @@ Your task is to extend the given code to implement several data link router func
 
 
 * \[10 points\] The packets you created are small enough to transmit over the client's interface. 
-  However, if we change the MTU of the router interfaces to 30, the packets will now need to be segmented.
+  However, if we change the MTU of link between `router_a` and `server` to 30, the packets will now need to be segmented.
 
   Your task is to extend the network layer to support segmentation.
   Study lecture notes and the book on how IP implements segmentation.

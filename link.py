@@ -18,14 +18,17 @@ class Link:
     # @param to_node: node to which data will be transfered
     # @param to_intf_num: number of the interface on that node
     # @param mtu: link maximum transmission unit
-    def __init__(self, from_node, from_intf_num, to_node, to_intf_num):
+    def __init__(self, from_node, from_intf_num, to_node, to_intf_num, mtu):
         self.from_node = from_node
         self.from_intf_num = from_intf_num
         self.to_node = to_node
         self.to_intf_num = to_intf_num
         self.in_intf = from_node.out_intf_L[from_intf_num]
         self.out_intf = to_node.in_intf_L[to_intf_num]
-        
+        # configure the MTUs of linked interfaces
+        self.in_intf.mtu = mtu
+        self.out_intf.mtu = mtu
+
         
     ## called when printing the object
     def __str__(self):
