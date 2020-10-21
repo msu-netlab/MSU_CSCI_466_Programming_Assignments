@@ -8,3 +8,5 @@ lib/python*
 \.pydevproject
 
 \.project
+
+*.ini
