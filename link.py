@@ -1,5 +1,6 @@
 import queue
 import threading
+from rprint import print
 
 ## An abstraction of a link between router interfaces
 class Link:
