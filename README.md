@@ -3,7 +3,7 @@
 ## Instructions
 
 
-Complete the following assignment in pairs.
+Complete the following assignment by yourself, or in a group of two.
 Submit your work into the Dropbox on D2L into the “Programming Assignment 4” folder. 
 All partners will submit the same solution and we will only grade one solution for each group.
 
