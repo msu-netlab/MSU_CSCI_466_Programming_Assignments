@@ -2,8 +2,7 @@
 
 ## Instructions
 
-
-Complete the following assignment in pairs, or groups of three. 
+Complete the following assignment by yourself, or in a group of two.
 Submit your work on D2L into the “Programming Assignment 5” folder. 
 All partners will submit the same solution and we will only grade one solution for each group.
 
@@ -113,11 +112,11 @@ Add transmissions from `Host 1` and `Host 2` to `Host 3` and configure MPLS tabl
 
 	a. [2 points] Recall that the IP header has a type of service (TOS) field that carries packet priority.
 	`NetworkPacket` constructor in this assignment has a `priority` argument, though it is currently unused.
-	The `udt_send()` function in simulation.py sends packet with priorities 0 and 1. 
+	The `udt_send()` function in `simulation.py` sends packet with priorities 0 and 1. 
 	Assume higher number priorities are higher priorities, i.e. 1 is higher than 0. 
 	Extend `NetworkPacket` to carry the priority number with which it was sent.
 
-	b. [3 points] Recall that forwarding at this assignment (at the link layer) accounts for link capacities.
+	b. [3 points] Recall that forwarding time in this assignment (at the link layer) accounts for link capacities.
 	You will notice a bottleneck at `Router B` in problem 1, where queued packets take a while to offload.
 	Implement a similar bottleneck at `Router D` in the network from problem 2.
 	Change the program output to show how many packets of each priority remain queued at each router.

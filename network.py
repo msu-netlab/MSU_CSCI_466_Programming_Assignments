@@ -1,6 +1,7 @@
 import queue
 import threading
 from link import LinkFrame
+from rprint import print
 
 
 ## wrapper class for a queue of packets

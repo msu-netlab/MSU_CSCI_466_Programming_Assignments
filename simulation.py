@@ -2,8 +2,7 @@ from network import Router, Host
 from link import Link, LinkLayer
 import threading
 from time import sleep
-import sys
-from copy import deepcopy
+from rprint import print
 
 ##configuration parameters
 router_queue_size = 0 #0 means unlimited

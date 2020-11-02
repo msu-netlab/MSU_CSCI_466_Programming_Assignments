@@ -1,6 +1,7 @@
 import queue
 import threading
 import time
+from rprint import print
 
 ## Implements a link layer frame
 # Needed to tell the network layer the type of the payload
