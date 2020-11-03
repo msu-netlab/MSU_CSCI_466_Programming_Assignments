@@ -123,7 +123,7 @@ Add transmissions from `Host 1` and `Host 2` to `Host 3` and configure MPLS tabl
 	You may inspect the priority in the encapsulated `NetworkPackets` to do so, or devise another method.
 
 	c. [5 points] Implement strict priority forwarding at each router.
-	While in 2.b you may 'cheat' by looking at `NetworkPacket` priority, MPLS forwarding should be done while looking only at the MPLS header.
+	While in 3.b you may 'cheat' by looking at `NetworkPacket` priority, MPLS forwarding should be done while looking only at the MPLS header.
 	However, the MPLS header does not carry a priority field and you should not extend it to do so.
 	Devise and implement another method, such that the MPLS routers encapsulate `NetworkPackets` at the edge and forward them (on different paths as in problem 2) with strict priority.
 

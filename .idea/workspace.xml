@@ -7,6 +7,13 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -21,7 +28,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/simulation.py" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RunManager">
     <configuration name="MPLS" type="PythonConfigurationType" factoryName="Python">
@@ -56,7 +63,7 @@
       <option name="presentableId" value="Default" />
       <updated>1604342044118</updated>
       <workItem from="1604342057966" duration="157000" />
-      <workItem from="1604342247806" duration="574000" />
+      <workItem from="1604342247806" duration="4451000" />
     </task>
     <servers />
   </component>
@@ -72,16 +79,32 @@
       <screen x="63" y="0" width="2497" height="1440" />
     </state>
     <state x="550" y="487" key="FileChooserDialogImpl/63.0.2497.1440@63.0.2497.1440" timestamp="1604342352971" />
-    <state x="272" y="365" key="SettingsEditor" timestamp="1604342322254">
+    <state width="2454" height="411" key="GridCell.Tab.0.bottom" timestamp="1604344785606">
       <screen x="63" y="0" width="2497" height="1440" />
     </state>
-    <state x="272" y="365" key="SettingsEditor/63.0.2497.1440@63.0.2497.1440" timestamp="1604342322254" />
-    <state x="983" y="410" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1604342436107">
+    <state width="2454" height="411" key="GridCell.Tab.0.bottom/63.0.2497.1440@63.0.2497.1440" timestamp="1604344785606" />
+    <state width="2454" height="411" key="GridCell.Tab.0.center" timestamp="1604344785606">
       <screen x="63" y="0" width="2497" height="1440" />
     </state>
-    <state x="983" y="410" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/63.0.2497.1440@63.0.2497.1440" timestamp="1604342436107" />
+    <state width="2454" height="411" key="GridCell.Tab.0.center/63.0.2497.1440@63.0.2497.1440" timestamp="1604344785606" />
+    <state width="2454" height="411" key="GridCell.Tab.0.left" timestamp="1604344785606">
+      <screen x="63" y="0" width="2497" height="1440" />
+    </state>
+    <state width="2454" height="411" key="GridCell.Tab.0.left/63.0.2497.1440@63.0.2497.1440" timestamp="1604344785606" />
+    <state width="2454" height="411" key="GridCell.Tab.0.right" timestamp="1604344785606">
+      <screen x="63" y="0" width="2497" height="1440" />
+    </state>
+    <state width="2454" height="411" key="GridCell.Tab.0.right/63.0.2497.1440@63.0.2497.1440" timestamp="1604344785606" />
+    <state x="272" y="365" key="SettingsEditor" timestamp="1604344164044">
+      <screen x="63" y="0" width="2497" height="1440" />
+    </state>
+    <state x="272" y="365" key="SettingsEditor/63.0.2497.1440@63.0.2497.1440" timestamp="1604344164044" />
+    <state x="983" y="410" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1604342995642">
+      <screen x="63" y="0" width="2497" height="1440" />
+    </state>
+    <state x="983" y="410" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/63.0.2497.1440@63.0.2497.1440" timestamp="1604342995642" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/MSU_CSCI_466_Programming_Assignments$MPLS.coverage" NAME="MPLS Coverage Results" MODIFIED="1604342358670" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/MSU_CSCI_466_Programming_Assignments$MPLS.coverage" NAME="MPLS Coverage Results" MODIFIED="1604344785592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
