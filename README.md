@@ -29,7 +29,7 @@ The players will then be able to query the server for the result of a play, as w
 
 ## Requirements
 
-You will implement a client-server implementation of the rock paper scissors game.
+You will implement a client-server implementation of the rock paper scissors game. You can see an example of an HTTP server at https://github.com/msu-netlab/CSCI_466_Examples/tree/HTTP_client_server.
 Client and server programs will be implemented in Python and communicate via HTTP messages only.
 Client and server programs may run on separate machines, for example on AWS EC2 instances, but may also run on the same machine with their sockets bound to different ports.
 
@@ -52,7 +52,7 @@ Client actions should include:
 - Checking the score of a game (the number of won and lost plays) and displaying it to the user.
   I suggest that you also treat a game as a resource and I leave it to you to design how to do that.
 - Resetting a game. 
-    
+  
 ### Server
 
 The server will run on the command line and may produce diagnostic output, which however will not be accessible to users.
@@ -89,16 +89,16 @@ To do so you may depart from the text interface requirement and use Python GUI p
 If you're working with a partner, `partner.txt` should include the name of your partner.
 If you're working by yourself, `partner.txt` should include the word "solo".
 
-* \[1 point\] Submit a `contributors.txt` created by running the following command inside your git repository:
+* \[1 point\] Submit a `contributors.txt` created by running the following command inside your git repository right before the submission of your assignment:
 
         git log --pretty=format:"%h %an %ad - %s" --shortstat --date=short > contributors.txt
 
     I will consult this file and adjust partner grades in case there are discrepancies in effort.
 
 * \[18 points\] Submit a zip archive of your code and a link to a YouTube video showing the execution of your program.
-Make sure your videos are under 5 minutes long - __we will only watch the first five minutes of your video__.
-We will award points for your implementation as follows, so make sure your video shows the appropriate functionality.
-    
+  Make sure your videos are under 5 minutes long - __we will only watch the first five minutes of your video__.
+  We will award points for your implementation as follows, so make sure your video shows the appropriate functionality.
+  
     * \[2 points\] Client sends an appropriate `HTTP` message to issue a play throw and processes an appropriate `HTTP` status code in the reply. 
     * \[2 points\] Client sends an appropriate `HTTP` message to check play result and displays the result to the user based on information in the `HTTP` reply.
     * \[1 point\] Server correctly computes results based on submitted throws.
@@ -109,6 +109,6 @@ We will award points for your implementation as follows, so make sure your video
     * \[2 points\]  Client sends an appropriate `HTTP` message to reset a game. The server resets the game only if both clients request a reset.
     * \[2 points\]  Server notifies clients that a game has been reset using an appropriate `HTTP` reply.
     * \[1 point\]  Server does not use memory to keep track of reset requests.
-    
+  
     
 
