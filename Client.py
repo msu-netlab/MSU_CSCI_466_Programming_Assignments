@@ -25,7 +25,7 @@ if __name__ == '__main__':
 		
 		# try to receive message before timeout
 		msg_S = None
-		while msg_S == None:
+		while msg_S is None:
 			msg_S = rdt.rdt_1_0_receive()
 			if msg_S is None:
 				if time_of_last_data + timeout < time.time():
