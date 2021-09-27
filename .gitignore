@@ -1,9 +1,5 @@
-__pycache*
-*.pyc
-*.sublime-project
-*.sublime-workspace
-.python-version
-bin/python3.6
-lib/python*
 desktop.ini
 /venv/
+__pycache__/
+
+.idea/
