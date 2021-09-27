@@ -46,8 +46,8 @@ Note that unlike full-fledged TCP, RDT is a unidirectional protocol with data tr
 To communicate in both directions the client and server execute separate RDT send and receive state machines as described in Section 3.4.1 of your textbook.
 However, due to the unidirectional capabilities of RDT, the connection between client RDT send and server RDT receive needs its own UDT channel.
 Similarly a separate UDT channel is needed between server RDT send and client RDT receive.
-To deal with this limitation the RDT class sets up two `network` connection.
-`net_snd.udt_send` and `net_snd.udt_receive` functions should be used in `RDT.send`, while `net_rcv.udt_send` and `net_rcv.udt_receive` in `RDT.receive`.
+To implement this design, the RDT class sets up two `network` connections.
+The `net_snd.udt_send` and `net_snd.udt_receive` functions should be used in `RDT.send`, while `net_rcv.udt_send` and `net_rcv.udt_receive` in `RDT.receive`.
 
 Finally, the `RDT.send` function for the client and server is blocking and may return when the sent data has been confirmed with an ACK by the receiver. 
 The `RDT.receive` function however, does not confirm if the ACK it sends to the sender has been received. 
