@@ -90,8 +90,8 @@ class NetworkLayer:
                 with self.lock:
                     self.buffer_S += recv_bytes.decode('utf-8')
             # you may need to uncomment the BlockingIOError handling on Windows machines
-            #             except BlockingIOError as err:
-            #                 pass
+            # except BlockingIOError as err:
+            #     pass
             except socket.timeout as err:
                 pass
             if self.stop:
