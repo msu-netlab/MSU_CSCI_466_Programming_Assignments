@@ -25,15 +25,13 @@ class NetworkLayer:
     
     def __init__(self, role_S, server_S, port):
         if role_S == 'client':
-            print('Network: role is client')
             self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.conn.connect((server_S, port))
             self.conn.settimeout(self.socket_timeout)
         
         elif role_S == 'server':
-            print('Network: role is server')
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.sock.bind(('localhost', port))
+            self.sock.bind(('127.0.0.1', port))
             self.sock.listen(1)
             self.conn, addr = self.sock.accept()
             self.conn.settimeout(self.socket_timeout)
@@ -83,19 +81,16 @@ class NetworkLayer:
     
     # Receive data from the network and save in internal buffer
     def collect(self):
-        #         print (threading.currentThread().getName() + ': Starting')
         while (True):
             try:
                 recv_bytes = self.conn.recv(2048)
                 with self.lock:
                     self.buffer_S += recv_bytes.decode('utf-8')
-            # you may need to uncomment the BlockingIOError handling on Windows machines
-            # except BlockingIOError as err:
-            #     pass
+            except BlockingIOError as err:
+                pass
             except socket.timeout as err:
                 pass
             if self.stop:
-                #                 print (threading.currentThread().getName() + ': Ending')
                 return
     
     # Deliver collected data to client

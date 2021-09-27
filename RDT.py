@@ -66,9 +66,9 @@ class RDT:
             self.net_snd = Network.NetworkLayer(role_S, server_S, port)
             self.net_rcv = Network.NetworkLayer(role_S, server_S, port + 1)
         else:
-            self.net_snd = Network.NetworkLayer(role_S, server_S, port + 1)
             self.net_rcv = Network.NetworkLayer(role_S, server_S, port)
-    
+            self.net_snd = Network.NetworkLayer(role_S, server_S, port + 1)
+
     def disconnect(self):
         self.net_snd.disconnect()
         self.net_rcv.disconnect()
