@@ -37,13 +37,18 @@ if __name__ == '__main__':
 	rdt = RDT.RDT('server', None, args.port)
 	while True:
 		# try to receiver message before timeout
-		msg_S = rdt.rdt_1_0_receive()
-		if msg_S is None:
-			if time_of_last_data + timeout < time.time():
-				break
-			else:
+		try:
+			msg_S = rdt.rdt_1_0_receive()
+			if msg_S is None:
 				continue
-		time_of_last_data = time.time()
+		except RDT.RDTException as e:
+			print(e)
+			break
+		# 	if time_of_last_data + timeout < time.time():
+		# 		break
+		# 	else:
+		# 		continue
+		# time_of_last_data = time.time()
 		
 		# convert and reply
 		rep_msg_S = piglatinize(msg_S)

@@ -1,4 +1,5 @@
 import argparse
+import select
 import socket
 import threading
 from time import sleep
@@ -20,21 +21,18 @@ class NetworkLayer:
     lock = threading.Lock()
     collect_thread = None
     stop = None
-    socket_timeout = 0.1
     reorder_msg_S = None
     
     def __init__(self, role_S, server_S, port):
         if role_S == 'client':
             self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.conn.connect((server_S, port))
-            self.conn.settimeout(self.socket_timeout)
         
         elif role_S == 'server':
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock.bind(('127.0.0.1', port))
             self.sock.listen(1)
             self.conn, addr = self.sock.accept()
-            self.conn.settimeout(self.socket_timeout)
         
         # start the thread to receive data on the connection
         self.collect_thread = threading.Thread(name='Collector', target=self.collect)
@@ -45,10 +43,11 @@ class NetworkLayer:
         if self.collect_thread:
             self.stop = True
             self.collect_thread.join()
-    
-    def __del__(self):
-        if self.sock is not None: self.sock.close()
-        if self.conn is not None: self.conn.close()
+        
+        if self.conn is not None:
+            self.conn.close()
+        if self.sock is not None:
+            self.sock.close()
     
     def udt_send(self, msg_S):
         # return without sending if the packet is being dropped
@@ -82,14 +81,12 @@ class NetworkLayer:
     # Receive data from the network and save in internal buffer
     def collect(self):
         while (True):
-            try:
+            read_sockets, _, _ = select.select([self.conn], [], [], 1)
+            if len(read_sockets):
                 recv_bytes = self.conn.recv(2048)
                 with self.lock:
                     self.buffer_S += recv_bytes.decode('utf-8')
-            except BlockingIOError as err:
-                pass
-            except socket.timeout as err:
-                pass
+            
             if self.stop:
                 return
     
