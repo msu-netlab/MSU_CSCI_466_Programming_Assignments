@@ -23,28 +23,17 @@ if __name__ == '__main__':
         print('Converting: ' + msg_S)
         rdt.rdt_1_0_send(msg_S)
         
-        # try to receive message before timeout
+        # receive message
         msg_S = None
         while msg_S is None:
-            msg_S = rdt.rdt_1_0_receive()
-            if msg_S is None:
+            # try to receiver message before timeout
+            try:
+                msg_S = rdt.rdt_1_0_receive()
+                if msg_S is None:
+                    continue
+            except RDT.RDTException as e:
+                print(e)
                 break
-        # if time_of_last_data + timeout < time.time():
-        # 	break
-        # else:
-        # 	continue
-        # time_of_last_data = time.time()
-        
-        # # try to receive message before timeout
-        # msg_S = None
-        # while msg_S is None:
-        # 	msg_S = rdt.rdt_1_0_receive()
-        # 	if msg_S is None:
-        # 		if time_of_last_data + timeout < time.time():
-        # 			break
-        # 		else:
-        # 			continue
-        # time_of_last_data = time.time()
         
         # print the result
         if msg_S:
