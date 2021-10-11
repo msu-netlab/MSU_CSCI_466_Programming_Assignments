@@ -44,11 +44,6 @@ if __name__ == '__main__':
 		except RDT.RDTException as e:
 			print(e)
 			break
-		# 	if time_of_last_data + timeout < time.time():
-		# 		break
-		# 	else:
-		# 		continue
-		# time_of_last_data = time.time()
 		
 		# convert and reply
 		rep_msg_S = piglatinize(msg_S)

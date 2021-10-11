@@ -103,10 +103,11 @@ class RDT:
             if len(self.byte_buffer) < length:
                 # return ret_S  # not enough bytes to read the whole packet
                 continue
-            # create packet from buffer content and add to return string
+            # create packet from buffer content
             p = Packet.from_byte_S(self.byte_buffer[0:length])
             # remove the packet bytes from the buffer
             self.byte_buffer = self.byte_buffer[length:]
+            # return packet message to the upper layer
             return p.msg_S
     
     def rdt_2_1_send(self, msg_S):
