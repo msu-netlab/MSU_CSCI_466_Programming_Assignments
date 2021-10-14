@@ -1,12 +1,12 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="RDT - client" type="PythonConfigurationType" factoryName="Python">
-    <module name="MSU_CSCI_466_Programming_Assignments" />
+    <module name="programmingAssignment2" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
     </envs>
-    <option name="SDK_HOME" value="C:\Users\mwitt\Google Drive\Teaching\CSCI 466\PAs\venv\Scripts\python.exe" />
+    <option name="SDK_HOME" value="C:\Users\peyto\Documents\CSCI\Fall2021\csci466\programmingAssignment2\venv\Scripts\python.exe" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <option name="IS_MODULE_SDK" value="false" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
