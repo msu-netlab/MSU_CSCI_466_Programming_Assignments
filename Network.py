@@ -56,8 +56,8 @@ class NetworkLayer:
         # corrupt a packet
         if random.random() < self.prob_byte_corr:
             start = random.randint(RDT.Packet.length_S_length,
-                                   len(msg_S) - RDT.Packet.length_S_length) # make sure not corrupting the length field
-                                                                            # since that makes life really difficult
+                                   len(msg_S) - RDT.Packet.length_S_length)  # make sure not corrupting the length field
+            # since that makes life really difficult
             num = random.randint(1, 5)
             repl_S = ''.join(random.sample('XXXXX', num))  # sample length >= num
             msg_S = msg_S[:start] + repl_S + msg_S[min(start + num, len(msg_S) - 1):]
