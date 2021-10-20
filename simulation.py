@@ -1,8 +1,8 @@
-'''
+"""
 Created on Oct 12, 2016
 
 @author: mwittie
-'''
+"""
 
 import network
 import link
@@ -11,7 +11,7 @@ from time import sleep
 from rprint import print
 
 
-## configuration parameters
+# configuration parameters
 router_queue_size = 0  # 0 means unlimited
 simulation_time = 1  # give the network sufficient time to transfer all packets before quitting
 

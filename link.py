@@ -1,18 +1,18 @@
-'''
+"""
 Created on Oct 12, 2016
 
 @author: mwittie
-'''
+"""
 
 import queue
 import threading
 from rprint import print
 
 
-## An abstraction of a link between router interfaces
+# An abstraction of a link between router interfaces
 class Link:
     
-    ## creates a link between two objects by looking up and linking node interfaces.
+    # creates a link between two objects by looking up and linking node interfaces.
     # @param from_node: node from which data will be transfered
     # @param from_intf_num: number of the interface on that node
     # @param to_node: node to which data will be transfered
@@ -28,23 +28,22 @@ class Link:
         # configure the MTUs of linked interfaces
         self.in_intf.mtu = mtu
         self.out_intf.mtu = mtu
-
-        
-    ## called when printing the object
+    
+    # called when printing the object
     def __str__(self):
         return 'Link %s-%d to %s-%d' % (self.from_node, self.from_intf_num, self.to_node, self.to_intf_num)
-        
-    ## transmit a packet from the 'from' to the 'to' interface
+    
+    # transmit a packet from the 'from' to the 'to' interface
     def tx_pkt(self):
         pkt_S = self.in_intf.get()
         if pkt_S is None:
-            return # return if no packet to transfer
+            return  # return if no packet to transfer
         if len(pkt_S) > self.in_intf.mtu:
             print('%s: packet "%s" length greater than the from interface MTU (%d)' % (self, pkt_S, self.out_intf.mtu))
             return  # return without transmitting if packet too big
         if len(pkt_S) > self.out_intf.mtu:
             print('%s: packet "%s" length greater than the to interface MTU (%d)' % (self, pkt_S, self.out_intf.mtu))
-            return # return without transmitting if packet too big
+            return  # return without transmitting if packet too big
         # otherwise transmit the packet
         try:
             self.out_intf.put(pkt_S)
@@ -52,36 +51,36 @@ class Link:
         except queue.Full:
             print('%s: packet lost' % (self))
             pass
-        
-        
-## An abstraction of the link layer
+
+
+# An abstraction of the link layer
 class LinkLayer:
     
     def __init__(self):
-        ## list of links in the network
+        # list of links in the network
         self.link_L = []
-        self.stop = False #for thread termination
-       
-    ## Return a name of the network layer
+        self.stop = False  # for thread termination
+    
+    # Return a name of the network layer
     def __str__(self):
         return "Network"
     
-    ## add a Link to the network
+    # add a Link to the network
     def add_link(self, link):
         self.link_L.append(link)
-        
-    ## transfer a packet across all links
+    
+    # transfer a packet across all links
     def transfer(self):
         for link in self.link_L:
             link.tx_pkt()
-                
-    ## thread target for the network to keep transmitting data across links
+    
+    # thread target for the network to keep transmitting data across links
     def run(self):
-        print (threading.currentThread().getName() + ': Starting')
+        print(threading.currentThread().getName() + ': Starting')
         while True:
-            #transfer one packet on all the links
+            # transfer one packet on all the links
             self.transfer()
-            #terminate
+            # terminate
             if self.stop:
-                print (threading.currentThread().getName() + ': Ending')
+                print(threading.currentThread().getName() + ': Ending')
                 return
