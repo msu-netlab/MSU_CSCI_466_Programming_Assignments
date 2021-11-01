@@ -1,3 +1,4 @@
 *.pyc
 *.ini
 __pycache__
+venv/**
