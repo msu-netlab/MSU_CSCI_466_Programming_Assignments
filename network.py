@@ -145,6 +145,7 @@ class Router:
     
     # Print routing table
     def print_routes(self):
+        print("Routing table at %s" % self.name)
         # TODO: print the routes as a two dimensional table
         print(self.rt_tbl_D)
     
