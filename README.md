@@ -73,7 +73,7 @@ The current `simulation_time` in `simulation.py` is one second. As the network b
  	```  
  	
 	where the top left corner represents the router from which these tables were printed, the rest of the top row represents the different destinations in the network, the rest of the left column represents paths through known routers, and the numbers represent path costs. 
-	In other words the way to read this table is (assume column row indexing): router `RA`(0,0) knows that the cost to destination `H2`(2,0) through router `RB`(0,2) is `3`(2,2).
+	In other words, the way to read this table is (assume column row indexing): router `RA`(0,0) knows that the cost to destination `H2`(2,0) through router `RB`(0,2) is `3`(2,2).
  	This table corresponds to what the final routing table should be for `RA` in the above network.
 
  	Getting this pretty print to work will be invaluable to you in debugging your routing protocol implementation.
