@@ -24,7 +24,7 @@ Your task is to extend the given code to implement several router functions.
 
 ### Starting Code
 
-The starting code for this project provides you with the implementation several network layers that cooperate to provide end-to-end communication.
+The starting code for this project provides you with the implementation of several network layers that cooperate to provide end-to-end communication.
 
 ```
     NETWORK LAYER (network.py)
