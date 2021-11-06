@@ -37,7 +37,7 @@ Currently, `simulation.py` defines the following network.
 ![image](images/simple.png)
 <!-- <img src="images/simple.png" alt="Drawing" style="width:400pt; height:100pt"/> -->
 
-At a high level, a network defined in `simulation.py` includes hosts, routers and links. 
+At a high level, a network defined in `simulation.py` includes hosts, routers, and links. 
 `Hosts` generate and receive traffic. 
 `Routers` forward traffic from one `Interface` to another based on routing tables that you will implement. 
 `Routers` also exchange routing tables to establish forwarding paths.
