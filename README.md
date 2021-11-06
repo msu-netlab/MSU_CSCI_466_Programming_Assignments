@@ -102,7 +102,7 @@ Submit a YouTube video link showing the execution of `simulation.py` until routi
 
 
 Submit a YouTube video link showing the execution of `simulation.py` forwarding packets between the hosts.
-We will grade you based on correct use of the routing tables.
+We will grade you based on the correct use of the routing tables.
 Make sure your output shows the forwarding decisions made by routers.
 Submit your code as `link_2.py`, `network_2.py`, and `simulation_2.py`.
 
