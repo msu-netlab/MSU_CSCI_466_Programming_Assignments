@@ -60,7 +60,7 @@ The current `simulation_time` in `simulation.py` is one second. As the network b
 
 1. [2 points] In the starting code the routing table is an empty dictionary.
 	Set up the routing table based on the `cost_D` parameter of the `Router` constructor.
-	The implement a _'pretty'_ print of the routing table in `Router.print_routes()` to show a routing table as follows:
+	Then, implement a _'pretty'_ print of the routing table in `Router.print_routes()` to show a routing table as follows:
 
 	```
 	╒══════╤══════╤══════╤══════╤══════╕
