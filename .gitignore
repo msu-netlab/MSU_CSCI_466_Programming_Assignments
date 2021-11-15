@@ -10,3 +10,4 @@ lib/python*
 \.pydevproject
 
 *.ini
+/venv/
