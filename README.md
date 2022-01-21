@@ -53,7 +53,7 @@ To run the starting code you may execute:
     python simulation.py
 ```
 
-The current `simulation_time` in `simulation.py` is one second. As the network becomes more complex and takes longer to execute, you may need to extend the simulation to allow all the packets to be transfered.
+The current `simulation_time` in `simulation.py` is one second. As the network becomes more complex and takes longer to execute, you may need to extend the simulation to allow all the packets to be transferred.
 
 
 ## Assignment
