@@ -24,7 +24,7 @@ Your task is to extend the given code to implement several router functions.
 
 ### Starting Code
 
-The starting code for this project provides you with the implementation several network layers that cooperate to provide end-to-end communication.
+The starting code for this project provides you with the implementation of several network layers that cooperate to provide end-to-end communication.
 
 ```
     NETWORK LAYER (network.py)
@@ -37,7 +37,7 @@ Currently, `simulation.py` defines the following network.
 ![image](images/simple.png)
 <!-- <img src="images/simple.png" alt="Drawing" style="width:400pt; height:100pt"/> -->
 
-At a high level a network defined in `simulation.py` includes hosts, routers and links. 
+At a high level, a network defined in `simulation.py` includes hosts, routers, and links. 
 `Hosts` generate and receive traffic. 
 `Routers` forward traffic from one `Interface` to another based on routing tables that you will implement. 
 `Routers` also exchange routing tables to establish forwarding paths.
@@ -60,7 +60,7 @@ The current `simulation_time` in `simulation.py` is one second. As the network b
 
 1. [2 points] In the starting code the routing table is an empty dictionary.
 	Set up the routing table based on the `cost_D` parameter of the `Router` constructor.
-	The implement a _'pretty'_ print of the routing table in `Router.print_routes()` to show a routing table as follows:
+	Then, implement a _'pretty'_ print of the routing table in `Router.print_routes()` to show a routing table as follows:
 
 	```
 	╒══════╤══════╤══════╤══════╤══════╕
@@ -72,8 +72,8 @@ The current `simulation_time` in `simulation.py` is one second. As the network b
 	╘══════╧══════╧══════╧══════╧══════╛
  	```  
  	
-	where the top left corner represents the router from which this tables was printed, the rest of the top row represents the different destinations in the network, the rest of the left column represents paths through known routers, and the numbers represent path costs. 
-	In other words the way to read this table is (assume column row indexing): router `RA`(0,0) knows that the cost to destination `H2`(2,0) through router `RB`(0,2) is `3`(2,2).
+	where the top left corner represents the router from which these tables were printed, the rest of the top row represents the different destinations in the network, the rest of the left column represents paths through known routers, and the numbers represent path costs. 
+	In other words, the way to read this table is (assume column row indexing): router `RA`(0,0) knows that the cost to destination `H2`(2,0) through router `RB`(0,2) is `3`(2,2).
  	This table corresponds to what the final routing table should be for `RA` in the above network.
 
  	Getting this pretty print to work will be invaluable to you in debugging your routing protocol implementation.
@@ -102,7 +102,7 @@ Submit a YouTube video link showing the execution of `simulation.py` until routi
 
 
 Submit a YouTube video link showing the execution of `simulation.py` forwarding packets between the hosts.
-We will grade you based on correct use of the routing tables.
+We will grade you based on the correct use of the routing tables.
 Make sure your output shows the forwarding decisions made by routers.
 Submit your code as `link_2.py`, `network_2.py`, and `simulation_2.py`.
 
